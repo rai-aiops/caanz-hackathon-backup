@@ -1,0 +1,15 @@
+2026-10-06T09:08:00Z	INFO	initializing...		Executing Process ContactDetailsSyncProcess
+2026-10-06T09:08:00Z	INFO	Start	Passthrough	Executing Start Shape with 3 document(s).
+2026-10-06T09:08:00Z	INFO	Document context		{"documentId": "doc-cust-0007", "customerId": "CUST-0007", "memberId": "MEM-0007", "email": "member7@example.com", "customerName": "Demo Member 7"}
+2026-10-06T09:08:00Z	INFO	Document context		{"documentId": "doc-cust-0107", "customerId": "CUST-0107", "memberId": "MEM-0107", "email": "member107@example.com", "customerName": "Demo Member 107"}
+2026-10-06T09:08:00Z	INFO	Document context		{"documentId": "doc-cust-0108", "customerId": "CUST-0108", "memberId": "MEM-0108", "email": "member108@example.com", "customerName": "Demo Member 108"}
+2026-10-06T09:08:01Z	INFO	Salesforce source query	Salesforce Connection: salesforce Connector	Executing Connector Shape with 1 document(s).
+2026-10-06T09:08:01Z	SEVERE	Salesforce source query	Salesforce Connection: salesforce Connector	Document doc-cust-0108: Salesforce response: FIELD_CUSTOM_VALIDATION_EXCEPTION for CUST-0108; source query failed.
+2026-10-06T09:08:01Z	INFO	Salesforce source query	Salesforce Connection: salesforce Connector	Shape executed with errors in 100 ms.
+2026-10-06T09:08:01Z	INFO	Connector response		Executing Connector Shape with 1 document(s).
+2026-10-06T09:08:01Z	INFO	Connector response		Document doc-cust-0107: NetSuite response: {"success":true}; Salesforce response: {"success":true}.
+2026-10-06T09:08:01Z	INFO	Connector response		Shape executed successfully in 100 ms.
+2026-10-06T09:08:01Z	INFO	NetSuite customer upsert	Netsuite Connection: netsuitesdk Connector	Executing Connector Shape with 1 document(s).
+2026-10-06T09:08:01Z	SEVERE	NetSuite customer upsert	Netsuite Connection: netsuitesdk Connector	Document doc-cust-0007: NetSuite Error: Nonexistent externalId CUST-0007; referenced customer record not found.
+2026-10-06T09:08:01Z	INFO	NetSuite customer upsert	Netsuite Connection: netsuitesdk Connector	Shape executed with errors in 100 ms.
+2026-10-06T09:08:04Z	INFO	cleanup...		Process execution completed with errors.

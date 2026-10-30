@@ -1,0 +1,518 @@
+{
+  "page": {
+    "id": "syn-dep-001",
+    "title": "Dependency Map — Member Integration Processes",
+    "space": "INTEGOPS",
+    "version": 4,
+    "status": "current",
+    "created": "2024-03-12T09:00:00Z",
+    "lastModified": "2024-09-10T09:00:00Z",
+    "author": "integration.team@example.com",
+    "lastModifiedBy": "platform.ops@example.com",
+    "labels": ["dependency-map", "integration", "triage-agent"],
+    "prototypeMode": {
+      "enabled": true,
+      "description": "When PROTOTYPE_MODE=true, boomi_scan.py returns the mockBoomiResponse block for each entry instead of calling the live Boomi Platform API. Set PROTOTYPE_MODE=false and provide actualProcessName values to run against a real environment.",
+      "envFlag": "PROTOTYPE_MODE"
+    },
+    "body": {
+      "format": "structured",
+      "sections": [
+        {
+          "sectionId": "sec-001",
+          "heading": "Purpose",
+          "content": "This document maps member-facing actions in the MemberPortal to the integration processes they trigger, the downstream systems they affect, and the team responsible for each process. It is the primary reference for the incident triage agent when identifying which integration process to inspect for a reported issue."
+        },
+        {
+          "sectionId": "sec-002",
+          "heading": "How to Use This Document",
+          "content": "When a ticket arrives describing a member-facing symptom, match the symptom keywords to a Member Action below. Follow the row to identify the candidate integration process, systems involved, and owning team. Use the Process Name to query Boomi logs via the Inspect Boomi Log Tool."
+        }
+      ]
+    },
+    "dependencyMap": {
+      "schemaVersion": "1.3",
+      "lastReviewed": "2024-09-01",
+      "reviewedBy": "integration.team@example.com",
+      "note": "Mappings marked confidence=low have not been validated against production traffic. Treat as indicative only.",
+      "entries": [
+        {
+          "entryId": "dm-001",
+          "memberAction": "Member updates employment information",
+          "triggerKeywords": ["employment", "employer", "job title", "workplace", "employment history", "work details"],
+          "boomiProcess": {
+            "name": "EmploymentUpdateListener",
+            "actualProcessName": "REPLACE_WITH_REAL_BOOMI_PROCESS_NAME",
+            "type": "Sub Process",
+            "environment": "Production",
+            "atomName": "IntegrationAtom-PROD",
+            "processId": "proc-e1a2b3c4"
+          },
+          "mockBoomiResponse": {
+            "scenario": "happy_path_with_error",
+            "executionId": "exec-mock-dm001-001",
+            "processName": "EmploymentUpdateListener",
+            "atomName": "IntegrationAtom-PROD",
+            "status": "ERROR",
+            "startTime": "2024-09-03T10:14:32Z",
+            "endTime": "2024-09-03T10:14:38Z",
+            "errorStep": "CRMSystem Upsert — Map Employment Fields",
+            "errorMessage": "ExternalId not found: no Contact record matching ExternalId '10043872' in CRMSystem",
+            "errorType": "APPLICATION_ERROR",
+            "retryCount": 1,
+            "inputSummary": {
+              "memberId": "10043872",
+              "actionType": "EmploymentUpdate"
+            }
+          },
+          "mockBoomiResponseAlt": {
+            "scenario": "no_boomi_error",
+            "description": "Use this variant for eval test case: no Boomi error found. boomi_scan returns empty result — agent must fall back to access layer guidance.",
+            "executionId": null,
+            "processName": "EmploymentUpdateListener",
+            "status": "NO_RESULTS",
+            "message": "No ERROR executions found for process 'EmploymentUpdateListener' in the last 24 hours."
+          },
+          "systemsInvolved": [
+            {
+              "system": "MemberPortal",
+              "role": "source",
+              "direction": "outbound",
+              "dataType": "Member employment form submission",
+              "layer": "Presentation"
+            },
+            {
+              "system": "IntegrationPlatform",
+              "role": "orchestrator",
+              "direction": "inbound-outbound",
+              "dataType": "Transformed employment payload",
+              "layer": "Integration"
+            },
+            {
+              "system": "CRMSystem",
+              "role": "target",
+              "direction": "inbound",
+              "dataType": "Contact employment fields",
+              "layer": "Application"
+            },
+            {
+              "system": "ERPSystem",
+              "role": "target",
+              "direction": "inbound",
+              "dataType": "Member account employment attributes",
+              "layer": "Application"
+            }
+          ],
+          "owningTeam": {
+            "name": "CRMTeam",
+            "escalationContact": "crm.support@example.com",
+            "slackChannel": "#crm-integrations"
+          },
+          "commonErrors": [
+            {
+              "errorSignature": "ExternalId not found",
+              "likelyCause": "Member record does not exist in CRMSystem",
+              "resolutionType": "DataFix",
+              "retryAfterFix": false
+            },
+            {
+              "errorSignature": "Timeout connecting to ERPSystem",
+              "likelyCause": "ERPSystem API unavailable or slow",
+              "resolutionType": "PlatformIssue",
+              "retryAfterFix": true
+            }
+          ],
+          "confidence": "high",
+          "notes": "Most common source of member-reported integration tickets. Validated against 6 months of production logs."
+        },
+        {
+          "entryId": "dm-002",
+          "memberAction": "Member renews membership or upgrades membership tier",
+          "triggerKeywords": ["renewal", "renew", "membership upgrade", "tier change", "subscription", "membership fee"],
+          "boomiProcess": {
+            "name": "MembershipRenewalOrchestrator",
+            "actualProcessName": "REPLACE_WITH_REAL_BOOMI_PROCESS_NAME",
+            "type": "Main Process",
+            "environment": "Production",
+            "atomName": "IntegrationAtom-PROD",
+            "processId": "proc-f2b3c4d5"
+          },
+          "mockBoomiResponse": {
+            "scenario": "platform_error",
+            "executionId": "exec-mock-dm002-001",
+            "processName": "MembershipRenewalOrchestrator",
+            "atomName": "IntegrationAtom-PROD",
+            "status": "ERROR",
+            "startTime": "2024-09-03T11:02:10Z",
+            "endTime": "2024-09-03T11:02:40Z",
+            "errorStep": "PaymentGateway Connector — Submit Transaction",
+            "errorMessage": "Connection timeout after 30000ms: PaymentGateway did not respond",
+            "errorType": "CONNECTION_ERROR",
+            "retryCount": 2,
+            "inputSummary": {
+              "memberId": "10098231",
+              "actionType": "MembershipRenewal",
+              "tier": "Fellow"
+            }
+          },
+          "systemsInvolved": [
+            {
+              "system": "MemberPortal",
+              "role": "source",
+              "direction": "outbound",
+              "dataType": "Renewal or upgrade request",
+              "layer": "Presentation"
+            },
+            {
+              "system": "PaymentGateway",
+              "role": "target",
+              "direction": "inbound",
+              "dataType": "Payment transaction",
+              "layer": "External"
+            },
+            {
+              "system": "CRMSystem",
+              "role": "target",
+              "direction": "inbound",
+              "dataType": "Membership status and tier",
+              "layer": "Application"
+            },
+            {
+              "system": "ERPSystem",
+              "role": "target",
+              "direction": "inbound",
+              "dataType": "Invoice and billing record",
+              "layer": "Application"
+            },
+            {
+              "system": "NotificationService",
+              "role": "target",
+              "direction": "inbound",
+              "dataType": "Confirmation email",
+              "layer": "Messaging"
+            }
+          ],
+          "owningTeam": {
+            "name": "ERPTeam",
+            "escalationContact": "erp.support@example.com",
+            "slackChannel": "#erp-integrations"
+          },
+          "commonErrors": [
+            {
+              "errorSignature": "Payment gateway response timeout",
+              "likelyCause": "PaymentGateway unreachable",
+              "resolutionType": "PlatformIssue",
+              "retryAfterFix": true
+            },
+            {
+              "errorSignature": "Duplicate invoice detected in ERPSystem",
+              "likelyCause": "Retry triggered after partial success",
+              "resolutionType": "DataFix",
+              "retryAfterFix": false
+            }
+          ],
+          "confidence": "high",
+          "notes": "Involves PaymentGateway which is an external system — triage should check PaymentGateway status page first."
+        },
+        {
+          "entryId": "dm-003",
+          "memberAction": "Member registers for an event or cancels event registration",
+          "triggerKeywords": ["event", "register", "registration", "cancel registration", "CPD event", "workshop", "webinar"],
+          "boomiProcess": {
+            "name": "EventRegistrationSync",
+            "actualProcessName": "REPLACE_WITH_REAL_BOOMI_PROCESS_NAME",
+            "type": "Sub Process",
+            "environment": "Production",
+            "atomName": "IntegrationAtom-PROD",
+            "processId": "proc-g3c4d5e6"
+          },
+          "mockBoomiResponse": {
+            "scenario": "data_error",
+            "executionId": "exec-mock-dm003-001",
+            "processName": "EventRegistrationSync",
+            "atomName": "IntegrationAtom-PROD",
+            "status": "ERROR",
+            "startTime": "2024-09-03T13:45:00Z",
+            "endTime": "2024-09-03T13:45:04Z",
+            "errorStep": "EventManagementSystem Connector — Create Registration",
+            "errorMessage": "EventManagementSystem API returned 404: event ID 'EVT-20240910-089' not found",
+            "errorType": "APPLICATION_ERROR",
+            "retryCount": 0,
+            "inputSummary": {
+              "memberId": "10067412",
+              "actionType": "EventRegistration",
+              "eventId": "EVT-20240910-089"
+            }
+          },
+          "systemsInvolved": [
+            {
+              "system": "MemberPortal",
+              "role": "source",
+              "direction": "outbound",
+              "dataType": "Event registration or cancellation payload",
+              "layer": "Presentation"
+            },
+            {
+              "system": "EventManagementSystem",
+              "role": "target",
+              "direction": "inbound",
+              "dataType": "Registration record",
+              "layer": "Application"
+            },
+            {
+              "system": "CRMSystem",
+              "role": "target",
+              "direction": "inbound",
+              "dataType": "CPD activity record",
+              "layer": "Application"
+            }
+          ],
+          "owningTeam": {
+            "name": "IntegrationTeam",
+            "escalationContact": "integration.ops@example.com",
+            "slackChannel": "#integration-platform"
+          },
+          "commonErrors": [
+            {
+              "errorSignature": "EventManagementSystem event ID not found",
+              "likelyCause": "Event not yet created in EventManagementSystem or ID mismatch",
+              "resolutionType": "DataFix",
+              "retryAfterFix": true
+            }
+          ],
+          "confidence": "medium",
+          "notes": "EventManagementSystem ID mapping is occasionally out of sync. Known gap — remediation planned Q1 next year."
+        },
+        {
+          "entryId": "dm-004",
+          "memberAction": "Member updates contact details (address, phone, email)",
+          "triggerKeywords": ["contact", "address", "phone", "email address", "update details", "personal details"],
+          "boomiProcess": {
+            "name": "ContactDetailsSyncProcess",
+            "actualProcessName": "REPLACE_WITH_REAL_BOOMI_PROCESS_NAME",
+            "type": "Sub Process",
+            "environment": "Production",
+            "atomName": "IntegrationAtom-PROD",
+            "processId": "proc-h4d5e6f7"
+          },
+          "mockBoomiResponse": {
+            "scenario": "happy_path_success",
+            "executionId": "exec-mock-dm004-001",
+            "processName": "ContactDetailsSyncProcess",
+            "atomName": "IntegrationAtom-PROD",
+            "status": "SUCCESS",
+            "startTime": "2024-09-03T14:10:00Z",
+            "endTime": "2024-09-03T14:10:05Z",
+            "errorStep": null,
+            "errorMessage": null,
+            "errorType": null,
+            "retryCount": 0,
+            "inputSummary": {
+              "memberId": "10055901",
+              "actionType": "ContactUpdate"
+            }
+          },
+          "systemsInvolved": [
+            {
+              "system": "MemberPortal",
+              "role": "source",
+              "direction": "outbound",
+              "dataType": "Contact update form payload",
+              "layer": "Presentation"
+            },
+            {
+              "system": "CRMSystem",
+              "role": "target",
+              "direction": "inbound",
+              "dataType": "Contact record fields",
+              "layer": "Application"
+            },
+            {
+              "system": "ERPSystem",
+              "role": "target",
+              "direction": "inbound",
+              "dataType": "Billing address fields",
+              "layer": "Application"
+            },
+            {
+              "system": "ContentLayer",
+              "role": "target",
+              "direction": "inbound",
+              "dataType": "Member profile display fields",
+              "layer": "Presentation"
+            }
+          ],
+          "owningTeam": {
+            "name": "CRMTeam",
+            "escalationContact": "crm.support@example.com",
+            "slackChannel": "#crm-integrations"
+          },
+          "commonErrors": [
+            {
+              "errorSignature": "Email already in use in CRMSystem",
+              "likelyCause": "Duplicate contact record exists",
+              "resolutionType": "DataFix",
+              "retryAfterFix": false
+            },
+            {
+              "errorSignature": "ContentLayer API 503",
+              "likelyCause": "ContentLayer deployment or maintenance window",
+              "resolutionType": "PlatformIssue",
+              "retryAfterFix": true
+            }
+          ],
+          "confidence": "high",
+          "notes": null
+        },
+        {
+          "entryId": "dm-005",
+          "memberAction": "Member completes CPD activity declaration",
+          "triggerKeywords": ["CPD", "continuing professional development", "declaration", "hours", "activity log", "learning"],
+          "boomiProcess": {
+            "name": "CPDDeclarationIngestion",
+            "actualProcessName": "REPLACE_WITH_REAL_BOOMI_PROCESS_NAME",
+            "type": "Main Process",
+            "environment": "Production",
+            "atomName": "IntegrationAtom-PROD",
+            "processId": "proc-i5e6f7g8"
+          },
+          "mockBoomiResponse": {
+            "scenario": "multiple_errors",
+            "executionId": "exec-mock-dm005-001",
+            "processName": "CPDDeclarationIngestion",
+            "atomName": "IntegrationAtom-PROD",
+            "status": "ERROR",
+            "startTime": "2024-09-03T15:00:00Z",
+            "endTime": "2024-09-03T15:00:06Z",
+            "errorStep": "CRMSystem Connector — Write CPD Record",
+            "errorMessage": "CRMSystem validation error: CPD hours value 240 exceeds annual limit of 120 for category 'Technical'",
+            "errorType": "VALIDATION_ERROR",
+            "retryCount": 0,
+            "inputSummary": {
+              "memberId": "10082774",
+              "actionType": "CPDDeclaration",
+              "hoursSubmitted": 240,
+              "category": "Technical"
+            },
+            "additionalErrors": [
+              {
+                "executionId": "exec-mock-dm005-002",
+                "errorMessage": "CRMSystem validation error: CPD activity type 'InternalTraining' not recognised — no mapping found",
+                "errorStep": "Map CPD Activity Type to CRM Code"
+              }
+            ]
+          },
+          "systemsInvolved": [
+            {
+              "system": "MemberPortal",
+              "role": "source",
+              "direction": "outbound",
+              "dataType": "CPD declaration submission",
+              "layer": "Presentation"
+            },
+            {
+              "system": "CRMSystem",
+              "role": "target",
+              "direction": "inbound",
+              "dataType": "CPD record and compliance status",
+              "layer": "Application"
+            }
+          ],
+          "owningTeam": {
+            "name": "CRMTeam",
+            "escalationContact": "crm.support@example.com",
+            "slackChannel": "#crm-integrations"
+          },
+          "commonErrors": [
+            {
+              "errorSignature": "CRMSystem validation error — CPD hours exceed annual limit",
+              "likelyCause": "Member submitted duplicate or excessive hours",
+              "resolutionType": "DataFix",
+              "retryAfterFix": false
+            }
+          ],
+          "confidence": "medium",
+          "notes": "Mapping between CPD activity types and CRM codes is partially documented. Some activity types may fall through without error — monitor for silent failures."
+        },
+        {
+          "entryId": "dm-006",
+          "memberAction": "Member requests password reset or account unlock",
+          "triggerKeywords": ["password", "reset", "account locked", "cannot login", "access", "login issue"],
+          "boomiProcess": null,
+          "mockBoomiResponse": null,
+          "systemsInvolved": [
+            {
+              "system": "IdentityProvider",
+              "role": "source-and-target",
+              "direction": "inbound-outbound",
+              "dataType": "Identity and credential management",
+              "layer": "Security"
+            }
+          ],
+          "owningTeam": {
+            "name": "InfrastructureTeam",
+            "escalationContact": "infra.support@example.com",
+            "slackChannel": "#infra-support"
+          },
+          "commonErrors": [],
+          "confidence": "high",
+          "notes": "No integration process involved. This is an IdentityProvider issue — route to InfrastructureTeam, not Applications. Out of scope for the Detection Agent. boomi_scan.py should not be called for this entry."
+        },
+        {
+          "entryId": "dm-007",
+          "memberAction": "Member submits a complaint or feedback form",
+          "triggerKeywords": ["complaint", "feedback", "dissatisfied", "issue report", "feedback form"],
+          "boomiProcess": {
+            "name": "MemberFeedbackRouter",
+            "actualProcessName": "REPLACE_WITH_REAL_BOOMI_PROCESS_NAME",
+            "type": "Sub Process",
+            "environment": "Production",
+            "atomName": "IntegrationAtom-PROD",
+            "processId": "proc-j6f7g8h9"
+          },
+          "mockBoomiResponse": {
+            "scenario": "low_confidence_trigger",
+            "executionId": "exec-mock-dm007-001",
+            "processName": "MemberFeedbackRouter",
+            "atomName": "IntegrationAtom-PROD",
+            "status": "ERROR",
+            "startTime": "2024-09-03T16:22:00Z",
+            "endTime": "2024-09-03T16:22:03Z",
+            "errorStep": "CRMSystem Connector — Create Case",
+            "errorMessage": "CRMSystem returned 500: internal server error — no further detail available",
+            "errorType": "APPLICATION_ERROR",
+            "retryCount": 1,
+            "inputSummary": {
+              "memberId": "10034556",
+              "actionType": "FeedbackSubmission"
+            }
+          },
+          "systemsInvolved": [
+            {
+              "system": "MemberPortal",
+              "role": "source",
+              "direction": "outbound",
+              "dataType": "Feedback or complaint form payload",
+              "layer": "Presentation"
+            },
+            {
+              "system": "CRMSystem",
+              "role": "target",
+              "direction": "inbound",
+              "dataType": "Case record",
+              "layer": "Application"
+            }
+          ],
+          "owningTeam": {
+            "name": "CRMTeam",
+            "escalationContact": "crm.support@example.com",
+            "slackChannel": "#crm-integrations"
+          },
+          "commonErrors": [],
+          "confidence": "low",
+          "notes": "Mapping not yet validated in production. Assumed based on architecture review — requires confirmation from CRMTeam. confidence=low should trigger the confidence guardrail and HITL handoff."
+        }
+      ]
+    }
+  }
+}

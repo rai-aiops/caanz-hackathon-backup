@@ -1,0 +1,106 @@
+{
+  "articles": [
+    {
+      "id": "FSKB-001",
+      "title": "Employment history integration triage",
+      "status": "published",
+      "body": "For employment-history failures, correlate member and incident time with EmploymentUpdateListener. A Salesforce FIELD_CUSTOM_VALIDATION_EXCEPTION at the source query is routed to Salesforce. A NetSuite nonexistent external ID error is routed to NetSuite for investigation. Do not infer the root cause from the reporting screen. Request missing incident time before log correlation.",
+      "tags": [
+        "employment-history"
+      ],
+      "platforms": [
+        "Salesforce"
+      ],
+      "process_ids": [
+        "proc-e1a2b3c4"
+      ],
+      "owner_group_id": "GRP-SALESFORCE",
+      "version": 1,
+      "updated_at": "2026-10-01T00:00:00Z"
+    },
+    {
+      "id": "FSKB-002",
+      "title": "NetSuite missing external record",
+      "status": "published",
+      "body": "A NetSuite nonexistent external ID response can affect queued customer/member upserts. Record the referenced ID and execution evidence, then route to NetSuite. Humans verify record state and resolve the mismatch.",
+      "tags": [
+        "member-profile"
+      ],
+      "platforms": [
+        "NetSuite"
+      ],
+      "process_ids": [
+        "proc-h4d5e6f7"
+      ],
+      "owner_group_id": "GRP-NETSUITE",
+      "version": 1,
+      "updated_at": "2026-10-01T00:00:00Z"
+    },
+    {
+      "id": "FSKB-003",
+      "title": "ECR cash-sale API rejection",
+      "status": "published",
+      "body": "A NetSuite API success=false response during cash-sale posting requires NetSuite review. Preserve the API error and correlation details; do not retry or change records automatically.",
+      "tags": [
+        "cash-sale"
+      ],
+      "platforms": [
+        "NetSuite"
+      ],
+      "process_ids": [
+        "proc-k7g8h9i0"
+      ],
+      "owner_group_id": "GRP-NETSUITE",
+      "version": 1,
+      "updated_at": "2026-10-01T00:00:00Z"
+    },
+    {
+      "id": "FSKB-004",
+      "title": "Checkout execution timeout",
+      "status": "published",
+      "body": "An execution time limit reached while waiting on the NetSuite connector is an investigation lead for NetSuite. Record the active connector and the timeout. Humans establish the underlying cause.",
+      "tags": [
+        "checkout"
+      ],
+      "platforms": [
+        "NetSuite"
+      ],
+      "process_ids": [
+        "proc-f2b3c4d5"
+      ],
+      "owner_group_id": "GRP-NETSUITE",
+      "version": 1,
+      "updated_at": "2026-10-01T00:00:00Z"
+    },
+    {
+      "id": "FSKB-005",
+      "title": "Checkout success status guidance",
+      "status": "published",
+      "body": "The earlier checkout runbook treats SUCCESS execution status as sufficient to conclude the integration completed without a business error.",
+      "tags": [
+        "checkout"
+      ],
+      "platforms": [
+        "NetSuite"
+      ],
+      "process_ids": [
+        "proc-f2b3c4d5"
+      ],
+      "owner_group_id": "GRP-NETSUITE",
+      "version": 1,
+      "updated_at": "2025-02-01T00:00:00Z"
+    },
+    {
+      "id": "FSKB-006",
+      "title": "CPD recording help",
+      "status": "published",
+      "body": "Questions about how to record CPD activity without a reported technical failure go to Education Support.",
+      "tags": [],
+      "platforms": [],
+      "process_ids": [],
+      "owner_group_id": "GRP-EDU",
+      "version": 1,
+      "updated_at": "2026-10-01T00:00:00Z"
+    }
+  ]
+}

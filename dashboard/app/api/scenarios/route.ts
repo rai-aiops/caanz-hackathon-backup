@@ -1,0 +1,48 @@
+import { NextResponse } from "next/server";
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+const DEFAULT_AGENTS_API_BASE_URL = "http://127.0.0.1:8000";
+
+function getAgentsApiBaseUrl() {
+  return (process.env.LOCAL_AGENTS_API_BASE_URL ?? DEFAULT_AGENTS_API_BASE_URL).replace(/\/+$/, "");
+}
+
+function formatBackendError(payload: unknown, fallback: string) {
+  if (!payload || typeof payload !== "object") return fallback;
+  if ("detail" in payload && typeof payload.detail === "string") return payload.detail;
+  if ("error" in payload && typeof payload.error === "string") return payload.error;
+  return fallback;
+}
+
+export async function GET() {
+  const endpoint = new URL(`${getAgentsApiBaseUrl()}/scenarios`);
+
+  let response: Response;
+  try {
+    response = await fetch(endpoint, { cache: "no-store" });
+  } catch (error) {
+    return NextResponse.json(
+      {
+        scenarios: [],
+        error: `Could not reach the local agents API at ${endpoint.origin}. Start it with: uv run python api.py`,
+        detail: error instanceof Error ? error.message : String(error),
+      },
+      { status: 502 },
+    );
+  }
+
+  const payload = (await response.json().catch(() => null)) as unknown;
+  if (!response.ok) {
+    return NextResponse.json(
+      {
+        scenarios: [],
+        error: formatBackendError(payload, `Scenario list failed with status ${response.status}.`),
+      },
+      { status: response.status },
+    );
+  }
+
+  return NextResponse.json(payload);
+}

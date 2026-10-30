@@ -1,0 +1,10 @@
+2026-10-06T09:24:00Z	INFO	initializing...		Executing Process MembershipRenewalOrchestrator
+2026-10-06T09:24:00Z	INFO	Start	Passthrough	Executing Start Shape with 1 document(s).
+2026-10-06T09:24:00Z	INFO	Document context		{"documentId": "doc-cust-0009", "customerId": "CUST-0009", "memberId": "MEM-0009", "email": "member9@example.com", "customerName": "Demo Member 9"}
+2026-10-06T09:24:01Z	INFO	Salesforce order update	Salesforce Connection: salesforce Connector	Executing Connector Shape with 1 document(s).
+2026-10-06T09:24:01Z	SEVERE	Salesforce order update	Salesforce Connection: salesforce Connector	Document doc-cust-0009: Salesforce response: UNABLE_TO_LOCK_ROW on order update.
+2026-10-06T09:24:01Z	INFO	Salesforce order update	Salesforce Connection: salesforce Connector	Shape executed with errors in 100 ms.
+2026-10-06T09:24:02Z	INFO	NetSuite sales-order upsert	Netsuite Connection: netsuitesdk Connector	Executing Connector Shape with 1 document(s).
+2026-10-06T09:24:02Z	SEVERE	NetSuite sales-order upsert	Netsuite Connection: netsuitesdk Connector	Document doc-cust-0009: NetSuite API response: {"success":false,"error":"Order update rejected"}
+2026-10-06T09:24:02Z	INFO	NetSuite sales-order upsert	Netsuite Connection: netsuitesdk Connector	Shape executed with errors in 100 ms.
+2026-10-06T09:24:04Z	INFO	cleanup...		Process execution completed with errors.

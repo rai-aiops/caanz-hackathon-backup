@@ -1,0 +1,433 @@
+{
+  "page": {
+    "id": "syn-acc-001",
+    "title": "Access Layer — System Architecture and Integration Topology",
+    "space": "INTEGOPS",
+    "version": 2,
+    "status": "current",
+    "created": "2024-03-12T09:30:00Z",
+    "lastModified": "2024-08-20T11:05:00Z",
+    "author": "integration.team@example.com",
+    "lastModifiedBy": "platform.ops@example.com",
+    "labels": ["access-layer", "architecture", "integration", "triage-agent"],
+    "body": {
+      "format": "structured",
+      "sections": [
+        {
+          "sectionId": "sec-001",
+          "heading": "Purpose",
+          "content": "This document describes the system layers in use across the organisation and which integration processes operate at each layer. It is used by the triage agent to determine which platform a suspected error originates from, and which team owns that platform."
+        },
+        {
+          "sectionId": "sec-002",
+          "heading": "Layer Overview",
+          "content": "The integration architecture is organised into five layers. Member-facing traffic enters at the Presentation Layer (MemberPortal, ContentLayer) and flows through the Integration Layer (IntegrationPlatform) into the Application Layer (CRMSystem, ERPSystem, EventManagementSystem). External services (PaymentGateway, NotificationService) operate at the External Layer. Identity and access management sits in the Security Layer (IdentityProvider)."
+        }
+      ]
+    },
+    "accessLayer": {
+      "schemaVersion": "1.1",
+      "lastReviewed": "2024-08-15",
+      "reviewedBy": "platform.ops@example.com",
+      "layers": [
+        {
+          "layerId": "layer-001",
+          "layerName": "Presentation",
+          "description": "Member-facing systems and content delivery. Traffic at this layer is initiated by members or staff through a browser or mobile interface. Errors here typically manifest as UI failures, failed form submissions, or content not rendering.",
+          "owningTeam": {
+            "name": "MemberSystemsTeam",
+            "escalationContact": "member.systems@example.com",
+            "slackChannel": "#member-portal"
+          },
+          "systems": [
+            {
+              "systemId": "sys-001",
+              "name": "MemberPortal",
+              "description": "The primary self-service portal used by members to update their profile, renew membership, register for events, and submit CPD declarations.",
+              "type": "Web Application",
+              "technology": "React / Node.js (fictionalised)",
+              "environment": "Cloud-hosted",
+              "integrationRole": "source",
+              "exposedInterfaces": [
+                {
+                  "interfaceType": "REST API",
+                  "direction": "outbound",
+                  "consumers": ["IntegrationPlatform"],
+                  "authMethod": "OAuth 2.0",
+                  "notes": "Emits integration events on member action completion. Events are consumed by IntegrationPlatform listeners."
+                }
+              ],
+              "owningTeam": "MemberSystemsTeam",
+              "sla": {
+                "availability": "99.5%",
+                "rto": "4 hours",
+                "rpo": "1 hour"
+              },
+              "commonIssues": [
+                "Session timeout causing form submission failure — member must re-login",
+                "Payload validation on address fields occasionally rejects special characters"
+              ],
+              "maintenanceWindow": "Sunday 02:00–04:00 AEST"
+            },
+            {
+              "systemId": "sys-002",
+              "name": "ContentLayer",
+              "description": "Content management and delivery system used to display member-facing news, resources, and portal profile pages. Receives member profile updates from CRMSystem.",
+              "type": "CMS",
+              "technology": "Sitecore (fictionalised)",
+              "environment": "Cloud-hosted",
+              "integrationRole": "target",
+              "exposedInterfaces": [
+                {
+                  "interfaceType": "REST API",
+                  "direction": "inbound",
+                  "consumers": ["IntegrationPlatform"],
+                  "authMethod": "API Key",
+                  "notes": "Profile fields written by ContactDetailsSyncProcess after CRM update."
+                }
+              ],
+              "owningTeam": "MemberSystemsTeam",
+              "sla": {
+                "availability": "99.0%",
+                "rto": "8 hours",
+                "rpo": "4 hours"
+              },
+              "commonIssues": [
+                "503 errors during deployment windows (Sunday 01:00–03:00 AEST)",
+                "Occasional cache staleness — profile changes may take up to 15 minutes to appear"
+              ],
+              "maintenanceWindow": "Sunday 01:00–03:00 AEST"
+            }
+          ]
+        },
+        {
+          "layerId": "layer-002",
+          "layerName": "Integration",
+          "description": "Middleware and integration platform. All data flows between Presentation, Application, and External layers pass through this layer. Errors at this layer affect multiple downstream systems and are typically the highest priority to diagnose.",
+          "owningTeam": {
+            "name": "IntegrationTeam",
+            "escalationContact": "integration.ops@example.com",
+            "slackChannel": "#integration-platform"
+          },
+          "systems": [
+            {
+              "systemId": "sys-003",
+              "name": "IntegrationPlatform",
+              "description": "The organisation's integration middleware. Hosts all named integration processes (listeners, orchestrators, sub-processes). All member-initiated integration flows pass through this system.",
+              "type": "Integration Platform as a Service (iPaaS)",
+              "technology": "Dell Boomi (fictionalised)",
+              "environment": "Cloud-hosted",
+              "integrationRole": "orchestrator",
+              "exposedInterfaces": [
+                {
+                  "interfaceType": "Boomi REST API",
+                  "direction": "inbound",
+                  "consumers": ["MemberPortal"],
+                  "authMethod": "Basic Auth (API Token)",
+                  "notes": "Used by boomi_scan.py to retrieve execution logs by process name or execution ID."
+                }
+              ],
+              "hostedProcesses": [
+                "EmploymentUpdateListener",
+                "MembershipRenewalOrchestrator",
+                "EventRegistrationSync",
+                "ContactDetailsSyncProcess",
+                "CPDDeclarationIngestion",
+                "MemberFeedbackRouter"
+              ],
+              "owningTeam": "IntegrationTeam",
+              "sla": {
+                "availability": "99.9%",
+                "rto": "1 hour",
+                "rpo": "15 minutes"
+              },
+              "commonIssues": [
+                "Atom restart required after deployment — processes queue during restart window (~5 min)",
+                "Connector license exhaustion during peak periods (membership renewal cycle)"
+              ],
+              "maintenanceWindow": "Wednesday 22:00–23:30 AEST"
+            }
+          ]
+        },
+        {
+          "layerId": "layer-003",
+          "layerName": "Application",
+          "description": "Core business application systems. These hold the organisation's canonical records for members, finances, and events. Errors here affect data integrity and are escalated to the relevant application owner.",
+          "owningTeam": null,
+          "note": "Ownership varies per system — see individual system owningTeam fields.",
+          "systems": [
+            {
+              "systemId": "sys-004",
+              "name": "CRMSystem",
+              "description": "Customer relationship management system. The system of record for member contact information, membership tier, CPD records, and case management. Updated by EmploymentUpdateListener, ContactDetailsSyncProcess, CPDDeclarationIngestion, MemberFeedbackRouter, and EventRegistrationSync.",
+              "type": "CRM",
+              "technology": "Salesforce (fictionalised)",
+              "environment": "Cloud-hosted",
+              "integrationRole": "target",
+              "exposedInterfaces": [
+                {
+                  "interfaceType": "REST API",
+                  "direction": "inbound",
+                  "consumers": ["IntegrationPlatform"],
+                  "authMethod": "OAuth 2.0 (Connected App)",
+                  "notes": "Uses ExternalId field on Contact object to match member records by membership number."
+                }
+              ],
+              "owningTeam": {
+                "name": "CRMTeam",
+                "escalationContact": "crm.support@example.com",
+                "slackChannel": "#crm-integrations"
+              },
+              "sla": {
+                "availability": "99.9%",
+                "rto": "2 hours",
+                "rpo": "1 hour"
+              },
+              "commonIssues": [
+                "ExternalId not found — member exists in Portal but not yet created in CRM (common for new joiners)",
+                "Governor limit errors during bulk renewal periods",
+                "Duplicate contact records causing update ambiguity"
+              ],
+              "keyFields": {
+                "memberIdField": "ExternalId__c",
+                "membershipStatusField": "Membership_Status__c",
+                "employerField": "Employer__c",
+                "cpdHoursField": "CPD_Hours_Current_Year__c"
+              },
+              "maintenanceWindow": "Managed by vendor — check Salesforce Trust status page"
+            },
+            {
+              "systemId": "sys-005",
+              "name": "ERPSystem",
+              "description": "Enterprise resource planning system. The system of record for financial transactions, invoices, and member billing. Updated by MembershipRenewalOrchestrator and EmploymentUpdateListener (employment attributes only).",
+              "type": "ERP",
+              "technology": "NetSuite (fictionalised)",
+              "environment": "Cloud-hosted",
+              "integrationRole": "target",
+              "exposedInterfaces": [
+                {
+                  "interfaceType": "REST API (SuiteQL / REST Record API)",
+                  "direction": "inbound",
+                  "consumers": ["IntegrationPlatform"],
+                  "authMethod": "OAuth 1.0a",
+                  "notes": "Token-based auth — integration credentials stored in Boomi connector config. Token rotation handled by IntegrationTeam."
+                }
+              ],
+              "owningTeam": {
+                "name": "ERPTeam",
+                "escalationContact": "erp.support@example.com",
+                "slackChannel": "#erp-integrations"
+              },
+              "sla": {
+                "availability": "99.5%",
+                "rto": "4 hours",
+                "rpo": "2 hours"
+              },
+              "commonIssues": [
+                "API rate limiting during concurrent renewal batch runs",
+                "Duplicate invoice detection when retry logic fires after a partial commit",
+                "Token expiry causing 401 errors — requires IntegrationTeam to rotate credentials"
+              ],
+              "keyFields": {
+                "memberIdField": "custbody_member_id",
+                "invoiceStatusField": "status",
+                "membershipTierField": "custbody_membership_tier"
+              },
+              "maintenanceWindow": "Managed by vendor — check NetSuite status page"
+            },
+            {
+              "systemId": "sys-006",
+              "name": "EventManagementSystem",
+              "description": "System used to manage CPD events, workshops, and webinars. Receives registration and cancellation events from EventRegistrationSync.",
+              "type": "Event Management Platform",
+              "technology": "Generic SaaS (fictionalised)",
+              "environment": "Cloud-hosted",
+              "integrationRole": "target",
+              "exposedInterfaces": [
+                {
+                  "interfaceType": "REST API",
+                  "direction": "inbound",
+                  "consumers": ["IntegrationPlatform"],
+                  "authMethod": "API Key",
+                  "notes": "Event IDs must exist in this system before MemberPortal exposes them for registration. Sync lag between event creation and portal publication can cause ID-not-found errors."
+                }
+              ],
+              "owningTeam": {
+                "name": "IntegrationTeam",
+                "escalationContact": "integration.ops@example.com",
+                "slackChannel": "#integration-platform"
+              },
+              "sla": {
+                "availability": "98.0%",
+                "rto": "8 hours",
+                "rpo": "4 hours"
+              },
+              "commonIssues": [
+                "Event ID not found — event exists in CRM but not yet provisioned in EventManagementSystem",
+                "Cancellation requests fail if registration record was manually deleted"
+              ],
+              "maintenanceWindow": "Managed by vendor"
+            }
+          ]
+        },
+        {
+          "layerId": "layer-004",
+          "layerName": "External",
+          "description": "Third-party services outside organisational control. The integration platform connects to these, but SLAs and incident response are governed by vendor agreements. Monitor vendor status pages for outages.",
+          "owningTeam": {
+            "name": "IntegrationTeam",
+            "escalationContact": "integration.ops@example.com",
+            "slackChannel": "#integration-platform"
+          },
+          "systems": [
+            {
+              "systemId": "sys-007",
+              "name": "PaymentGateway",
+              "description": "Third-party payment processing service used during membership renewal and upgrade flows. Transaction results are written back to ERPSystem by MembershipRenewalOrchestrator.",
+              "type": "Payment Gateway",
+              "technology": "Generic payment provider (fictionalised)",
+              "environment": "External SaaS",
+              "integrationRole": "target",
+              "exposedInterfaces": [
+                {
+                  "interfaceType": "REST API",
+                  "direction": "inbound",
+                  "consumers": ["IntegrationPlatform"],
+                  "authMethod": "API Key (HTTPS)",
+                  "notes": "Timeout threshold set at 30s in Boomi connector config. Idempotency key used on retry to prevent double-charge."
+                }
+              ],
+              "owningTeam": null,
+              "vendorStatusPage": "https://status.paymentgateway.example.com (fictionalised)",
+              "sla": {
+                "availability": "99.95% (vendor-stated)",
+                "rto": "Vendor-managed",
+                "rpo": "Vendor-managed"
+              },
+              "commonIssues": [
+                "Timeout on high-traffic days (e.g. renewal deadline)",
+                "Webhook delivery failures causing ERPSystem invoice not to update"
+              ],
+              "maintenanceWindow": "Vendor-managed — check status page"
+            },
+            {
+              "systemId": "sys-008",
+              "name": "NotificationService",
+              "description": "Transactional email and SMS delivery service. Used by MembershipRenewalOrchestrator to send confirmation emails to members.",
+              "type": "Messaging / Notification Service",
+              "technology": "Generic notification SaaS (fictionalised)",
+              "environment": "External SaaS",
+              "integrationRole": "target",
+              "exposedInterfaces": [
+                {
+                  "interfaceType": "REST API",
+                  "direction": "inbound",
+                  "consumers": ["IntegrationPlatform"],
+                  "authMethod": "API Key",
+                  "notes": "Failures here do not block the renewal flow — they are logged as warnings. Member can request manual resend."
+                }
+              ],
+              "owningTeam": null,
+              "vendorStatusPage": "https://status.notificationservice.example.com (fictionalised)",
+              "sla": {
+                "availability": "99.9% (vendor-stated)",
+                "rto": "Vendor-managed",
+                "rpo": "Vendor-managed"
+              },
+              "commonIssues": [
+                "Soft bounce on invalid member email — logged but non-blocking",
+                "Rate limiting during bulk renewal sends"
+              ],
+              "maintenanceWindow": "Vendor-managed"
+            }
+          ]
+        },
+        {
+          "layerId": "layer-005",
+          "layerName": "Security",
+          "description": "Identity and access management systems. Not involved in integration data flows — issues at this layer are routed to InfrastructureTeam, not the Applications team.",
+          "owningTeam": {
+            "name": "InfrastructureTeam",
+            "escalationContact": "infra.support@example.com",
+            "slackChannel": "#infra-support"
+          },
+          "systems": [
+            {
+              "systemId": "sys-009",
+              "name": "IdentityProvider",
+              "description": "Manages member and staff authentication (SSO, password reset, MFA, account lockout). Member login to MemberPortal is handled here. Not part of the integration data flows managed by IntegrationPlatform.",
+              "type": "Identity Provider",
+              "technology": "Generic IdP / SSO (fictionalised)",
+              "environment": "Cloud-hosted",
+              "integrationRole": "standalone",
+              "exposedInterfaces": [
+                {
+                  "interfaceType": "SAML 2.0 / OIDC",
+                  "direction": "outbound",
+                  "consumers": ["MemberPortal"],
+                  "authMethod": "Federation",
+                  "notes": "MemberPortal delegates all login to IdentityProvider. No Boomi process involved."
+                }
+              ],
+              "owningTeam": {
+                "name": "InfrastructureTeam",
+                "escalationContact": "infra.support@example.com",
+                "slackChannel": "#infra-support"
+              },
+              "sla": {
+                "availability": "99.99%",
+                "rto": "1 hour",
+                "rpo": "Near-zero"
+              },
+              "commonIssues": [
+                "Account lockout after failed login attempts — self-service reset available",
+                "MFA token sync issues on device change"
+              ],
+              "maintenanceWindow": "First Saturday of month 00:00–01:00 AEST"
+            }
+          ]
+        }
+      ],
+      "integrationTopology": {
+        "description": "Summary of how data flows between layers for the primary integration scenarios.",
+        "flows": [
+          {
+            "flowId": "flow-001",
+            "name": "Employment Update Flow",
+            "path": ["MemberPortal", "IntegrationPlatform (EmploymentUpdateListener)", "CRMSystem", "ERPSystem"],
+            "direction": "left-to-right",
+            "triggeredBy": "Member saves employment information on MemberPortal"
+          },
+          {
+            "flowId": "flow-002",
+            "name": "Membership Renewal Flow",
+            "path": ["MemberPortal", "IntegrationPlatform (MembershipRenewalOrchestrator)", "PaymentGateway", "CRMSystem", "ERPSystem", "NotificationService"],
+            "direction": "left-to-right",
+            "triggeredBy": "Member completes renewal or upgrade on MemberPortal"
+          },
+          {
+            "flowId": "flow-003",
+            "name": "Event Registration Flow",
+            "path": ["MemberPortal", "IntegrationPlatform (EventRegistrationSync)", "EventManagementSystem", "CRMSystem"],
+            "direction": "left-to-right",
+            "triggeredBy": "Member registers for or cancels a CPD event"
+          },
+          {
+            "flowId": "flow-004",
+            "name": "Contact Details Update Flow",
+            "path": ["MemberPortal", "IntegrationPlatform (ContactDetailsSyncProcess)", "CRMSystem", "ERPSystem", "ContentLayer"],
+            "direction": "left-to-right",
+            "triggeredBy": "Member updates contact details on MemberPortal"
+          },
+          {
+            "flowId": "flow-005",
+            "name": "CPD Declaration Flow",
+            "path": ["MemberPortal", "IntegrationPlatform (CPDDeclarationIngestion)", "CRMSystem"],
+            "direction": "left-to-right",
+            "triggeredBy": "Member submits a CPD activity declaration"
+          }
+        ]
+      }
+    }
+  }
+}

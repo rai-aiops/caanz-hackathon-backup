@@ -1,0 +1,147 @@
+{
+  "classifications": [
+    "Application Support",
+    "Infrastructure",
+    "Education"
+  ],
+  "categories": [
+    {
+      "category": "Member Services",
+      "subcategories": [
+        "Employment History",
+        "Member Profile",
+        "Checkout"
+      ]
+    },
+    {
+      "category": "Finance",
+      "subcategories": [
+        "Order Processing"
+      ]
+    },
+    {
+      "category": "Infrastructure",
+      "subcategories": [
+        "Connectivity"
+      ]
+    },
+    {
+      "category": "Education",
+      "subcategories": [
+        "CPD Guidance"
+      ]
+    },
+    {
+      "category": "Other",
+      "subcategories": [
+        "Unclassified"
+      ]
+    }
+  ],
+  "platforms": [
+    {
+      "name": "Sitecore",
+      "group_id": "GRP-SITECORE"
+    },
+    {
+      "name": "Salesforce",
+      "group_id": "GRP-SALESFORCE"
+    },
+    {
+      "name": "Boomi",
+      "group_id": "GRP-BOOMI"
+    },
+    {
+      "name": "NetSuite",
+      "group_id": "GRP-NETSUITE"
+    }
+  ],
+  "statuses": [
+    {
+      "name": "New",
+      "state": "active"
+    },
+    {
+      "name": "Open",
+      "state": "active"
+    },
+    {
+      "name": "Waiting for Requester",
+      "state": "active"
+    },
+    {
+      "name": "Assigned",
+      "state": "active"
+    },
+    {
+      "name": "Manual Review",
+      "state": "active"
+    },
+    {
+      "name": "Resolved",
+      "state": "resolved"
+    },
+    {
+      "name": "Closed",
+      "state": "closed"
+    }
+  ],
+  "priorities": [
+    "Low",
+    "Normal",
+    "High",
+    "Critical"
+  ],
+  "tags": [
+    {
+      "name": "AI",
+      "description": "Ticket was processed by the agentic workflow."
+    },
+    {
+      "name": "resolved",
+      "description": "Resolution was explicitly confirmed; not a timeout."
+    },
+    {
+      "name": "timeout",
+      "description": "Confirmation window elapsed; not proof of successful resolution."
+    },
+    {
+      "name": "KB Update Recommendation",
+      "description": "A Freshservice KB recommendation was added as a private note."
+    },
+    {
+      "name": "Dependency Map Update Recommendation",
+      "description": "A dependency-map change was proposed in a Confluence draft."
+    },
+    {
+      "name": "employment-history",
+      "description": "Topic or routing tag: employment-history."
+    },
+    {
+      "name": "member-profile",
+      "description": "Topic or routing tag: member-profile."
+    },
+    {
+      "name": "checkout",
+      "description": "Topic or routing tag: checkout."
+    },
+    {
+      "name": "cash-sale",
+      "description": "Topic or routing tag: cash-sale."
+    },
+    {
+      "name": "manual-review",
+      "description": "Topic or routing tag: manual-review."
+    }
+  ],
+  "tagging_guidelines": "These guidelines apply to human and AI actors tagging Freshservice tickets. Knowledge review adds AI after an explicit resolution or timeout outcome; triage alone does not require it. Human actors should use AI only when AI processing occurred. Preserve existing tags and avoid duplicates. Prefer existing tags that accurately describe the ticket. If no suitable existing tag is available, use a meaningful, nonblank new tag. Use resolved when resolution has been explicitly confirmed, or timeout when the confirmation window has elapsed without confirmation. Never use resolved and timeout together, and do not apply either during triage before an explicit outcome. A timeout does not prove that the issue was resolved. Add KB Update Recommendation after a Freshservice KB recommendation has been saved as a private note. Add Dependency Map Update Recommendation after a dependency-map recommendation has been saved as a Confluence draft. Check the ticket outcome and saved recommendations before choosing these tags.",
+  "acknowledgement_template": {
+    "subject": "Re: {ticket_id} {subject}",
+    "body": "Hello {requester_name}, we have received your request {ticket_id}. We will review the details and route it to the appropriate team.",
+    "placeholders": [
+      "ticket_id",
+      "subject",
+      "requester_name"
+    ]
+  }
+}

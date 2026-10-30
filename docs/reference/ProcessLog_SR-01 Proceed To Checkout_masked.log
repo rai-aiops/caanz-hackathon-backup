@@ -1,0 +1,126 @@
+2026-10-06T05:41:31Z	INFO	initializing...		Executing Process SR-01: Proceed To Checkout
+2026-10-06T05:41:31Z	INFO	Start	wss Connector; Oper - ProceedToCheckout	Executing Start Shape
+2026-10-06T05:41:31Z	INFO	Start	wss Connector; Oper - ProceedToCheckout	1 document(s) found for processing.
+2026-10-06T05:41:31Z	INFO	Start	wss Connector; Oper - ProceedToCheckout	Shape executed successfully in 0 ms.
+2026-10-06T05:41:31Z	INFO	Try/Catch		Executing Try/Catch Shape with 1 document(s).
+2026-10-06T05:41:31Z	INFO	Try/Catch		Launching Try/Catch Shape fiber f_0 as execution-e8e5781a-1b46-4310-bfc9-d783c605d198-2026.10.06 with 1 document(s).
+2026-10-06T05:41:40Z	INFO	Try/Catch		Completed Try/Catch initial execution (shape2)
+2026-10-06T05:41:31Z	INFO	initializing...		Executing Process SR-01: Proceed To Checkout (Continuation f_0)
+2026-10-06T05:41:31Z	INFO	Try/Catch		Executing Try/Catch Shape continuation as f_0 with 1 document(s).
+2026-10-06T05:41:31Z	INFO	Try/Catch		Shape executed successfully in 0 ms.
+2026-10-06T05:41:31Z	INFO	Process Call	passing in start data, receiving returned data	Executing Process Call Shape with 1 document(s).
+2026-10-06T05:41:31Z	INFO	Process Call	passing in start data, receiving returned data	Executing process (Sub) SR-01: Proceed To Checkout
+2026-10-06T05:41:31Z	INFO	Process Call	passing in start data, receiving returned data	Shape executed successfully in 27 ms.
+2026-10-06T05:41:31Z	INFO	Try/Catch		Executing Try/Catch Shape with 1 document(s).
+2026-10-06T05:41:31Z	INFO	Try/Catch		Launching Try/Catch Shape fiber f_0_0 as execution-39e7158f-4ab6-4572-869c-855e75a02d82-2026.10.06 with 1 document(s).
+2026-10-06T05:41:40Z	INFO	Try/Catch		Completed Try/Catch initial execution (shape71)
+2026-10-06T05:41:31Z	INFO	initializing...		Executing Process (Sub) SR-01: Proceed To Checkout (Continuation f_0_0)
+2026-10-06T05:41:31Z	INFO	Try/Catch		Executing Try/Catch Shape continuation as f_0_0 with 1 document(s).
+2026-10-06T05:41:31Z	INFO	Try/Catch		Shape executed successfully in 0 ms.
+2026-10-06T05:41:31Z	INFO	Branch		Executing Branch Shape with 1 document(s).
+2026-10-06T05:41:31Z	INFO	Branch		Shape executed successfully in 0 ms.
+2026-10-06T05:41:31Z	INFO	Set Resource Path		Executing Set Properties Shape with 1 document(s).
+2026-10-06T05:41:31Z	INFO	Set Resource Path		Shape executed successfully in 3 ms.
+2026-10-06T05:41:31Z	INFO	Log Request		Executing Notify Shape with 1 document(s).
+2026-10-06T05:41:31Z	INFO	Log Request		Log Request: URL: services/apexrest/ProcessSubsOrder Request: {"customerId":"[CUST_ID]"}
+2026-10-06T05:41:31Z	INFO	Log Request		Shape executed successfully in 0 ms.
+2026-10-06T05:41:31Z	INFO	Connector	Salesforce HTTP OAuth 2.0: http Connector; Oper - HTTP_ProceedtoCheckout	Executing Connector Shape with 1 document(s).
+2026-10-06T05:41:32Z	INFO	Connector	Salesforce HTTP OAuth 2.0: http Connector; Oper - HTTP_ProceedtoCheckout	Shape executed successfully in 877 ms.
+2026-10-06T05:41:32Z	INFO	Log Response		Executing Notify Shape with 1 document(s).
+2026-10-06T05:41:32Z	INFO	Log Response		Log Response: {"statusMessage":"Order inserted in Salesforce","statusCode":"201","orderPayloadXML":"<Order><OrderNumber>01066411</OrderNumber><RecordTypeName>1</RecordTypeName><CurrencyIsoCode>AUD</CurrencyIsoCode><Status>Pending</Status><OrderStartDate>6/10/2026</OrderStartDate><TotalAmount>0.00</TotalAmount><GST_Amount__c>0.00</GST_Amount__c><Netsuite_Receipt_Amount__c>0.00</Netsuite_Receipt_Amount__c><PaymentTerms>15</PaymentTerms><RevenueRecognitionStartDate>10/3/2026</RevenueRecognitionStartDate><RevenueRecognitionEndDate>30/6/2027</RevenueRecognitionEndDate><BillProcessRef>True</BillProcessRef><Account><Customer_ID__c>[CUST_ID]</Customer_ID__c><PersonEmail>[EMAIL]</PersonEmail><Affiliated_Branch_Country__c>Australia</Affiliated_Branch_Country__c><BASC__c></BASC__c></Account><OrderProduct><NetSuite_Product_ID__c>137</NetSuite_Product_ID__c><NetSuite_Pricing_Level__c>29</NetSuite_Pricing_Level__c><UnitPrice>0.00</UnitPrice></OrderProduct></Order>","email":"[EMAIL]","customerId":"[CUST_ID]"}
+2026-10-06T05:41:32Z	INFO	Log Response		Shape executed successfully in 0 ms.
+2026-10-06T05:41:32Z	INFO	Decision		Executing Decision with 1 document(s).
+2026-10-06T05:41:32Z	INFO	Decision		Shape executed successfully in 5 ms.
+2026-10-06T05:41:32Z	INFO	Document Properties		Executing Set Properties Shape with 1 document(s).
+2026-10-06T05:41:32Z	INFO	Document Properties		Shape executed successfully in 1 ms.
+2026-10-06T05:41:32Z	INFO	Stop	continuing process	Executing Stop Shape with 1 document(s).
+2026-10-06T05:41:32Z	INFO	Stop	continuing process	Shape executed successfully in 0 ms.
+2026-10-06T05:41:32Z	INFO	Branch		Executing Branch Shape with 1 document(s).
+2026-10-06T05:41:32Z	INFO	Branch		Shape executed successfully in 0 ms.
+2026-10-06T05:41:32Z	INFO	Process Call	passing in start data, no return data	Executing Process Call Shape with 1 document(s).
+2026-10-06T05:41:32Z	INFO	Process Call	passing in start data, no return data	Executing process (sub) - Upsert NS Order
+2026-10-06T05:41:32Z	INFO	Process Call	passing in start data, no return data	Shape executed successfully in 139 ms.
+2026-10-06T05:41:32Z	INFO	Message		Executing Message Shape with 1 document(s).
+2026-10-06T05:41:32Z	INFO	Message		Shape executed successfully in 0 ms.
+2026-10-06T05:41:32Z	INFO	Map	Convert to Canonical Profile (Order) SR-02	Executing Map with 1 document(s).
+2026-10-06T05:41:32Z	INFO	Map	Convert to Canonical Profile (Order) SR-02	Shape executed successfully in 1 ms.
+2026-10-06T05:41:32Z	INFO	Try/Catch		Executing Try/Catch Shape with 1 document(s).
+2026-10-06T05:41:32Z	INFO	Try/Catch		Launching Try/Catch Shape fiber f_0_0_0 as execution-ec72dc36-e48a-4d4f-af07-a85a44225dc1-2026.10.06 with 1 document(s).
+2026-10-06T05:41:39Z	INFO	Try/Catch		Completed Try/Catch initial execution (shape5)
+2026-10-06T05:41:32Z	INFO	initializing...		Executing Process (sub) - Upsert NS Order (Continuation f_0_0_0)
+2026-10-06T05:41:32Z	INFO	Try/Catch		Executing Try/Catch Shape continuation as f_0_0_0 with 1 document(s).
+2026-10-06T05:41:32Z	INFO	Try/Catch		Shape executed successfully in 0 ms.
+2026-10-06T05:41:32Z	INFO	Document Properties		Executing Set Properties Shape with 1 document(s).
+2026-10-06T05:41:32Z	INFO	Document Properties		Shape executed successfully in 2 ms.
+2026-10-06T05:41:32Z	INFO	Map	Upsert Netsuite Sales Order SR-02	Executing Map with 1 document(s).
+2026-10-06T05:41:32Z	INFO	Map	Upsert Netsuite Sales Order SR-02	Shape executed successfully in 7 ms.
+2026-10-06T05:41:32Z	INFO	Show Request		Executing Notify Shape with 1 document(s).
+2026-10-06T05:41:32Z	INFO	Show Request		NS Sales Order Upsert Request: <?xml version='1.0' encoding='UTF-8'?>  <ns1:SalesOrder xmlns:ns1="urn:sales_2023_2.transactions.webservices.netsuite.com" xmlns:ns2="urn:core_2023_2.platform.webservices.netsuite.com" xmlns:ns3="urn:common_2023_2.platform.webservices.netsuite.com" externalId="01066411">    <ns1:entity externalId="[CUST_ID]au" />    <ns1:currency>AUD</ns1:currency>    <ns1:paymentMethod internalId="1" />    <ns1:subTotal>0.00</ns1:subTotal>    <ns1:taxTotal>0.00</ns1:taxTotal>    <ns1:total>0.00</ns1:total>    <ns1:status>Pending</ns1:status>    <ns1:itemList>      <ns1:item>        <ns1:subscription internalId="1" />        <ns1:item internalId="137" />        <ns1:price internalId="29" />        <ns1:rate>0.00</ns1:rate>      </ns1:item>    </ns1:itemList>  </ns1:SalesOrder>
+2026-10-06T05:41:32Z	INFO	Show Request		Shape executed successfully in 0 ms.
+2026-10-06T05:41:32Z	INFO	Connector	Netsuite Connection: netsuitesdk Connector; OPER - NetSuite Salesorder | UPSERT SR-01	Executing Connector Shape with 1 document(s).
+2026-10-06T05:41:37Z	INFO	Connector	Netsuite Connection: netsuitesdk Connector; OPER - NetSuite Salesorder | UPSERT SR-01	Shape executed successfully in 5130 ms.
+2026-10-06T05:41:37Z	INFO	Log NS response		Executing Notify Shape with 1 document(s).
+2026-10-06T05:41:37Z	INFO	Log NS response		: <?xml version="1.0" encoding="UTF-8" standalone="no"?><Result><id>29024801</id><externalId>01066411</externalId><success>true</success></Result>
+2026-10-06T05:41:37Z	INFO	Log NS response		Shape executed successfully in 1 ms.
+2026-10-06T05:41:37Z	INFO	Success?		Executing Decision with 1 document(s).
+2026-10-06T05:41:37Z	INFO	Success?		Shape executed successfully in 4 ms.
+2026-10-06T05:41:37Z	INFO	Message		Executing Message Shape with 1 document(s).
+2026-10-06T05:41:37Z	INFO	Message		Shape executed successfully in 1 ms.
+2026-10-06T05:41:37Z	INFO	Map	Query NS Sales Order No SR-01	Executing Map with 1 document(s).
+2026-10-06T05:41:39Z	INFO	Map	Query NS Sales Order No SR-01	Shape executed successfully in 1890 ms.
+2026-10-06T05:41:39Z	INFO	DPP_NS_SalesOrderID		Executing Set Properties Shape with 1 document(s).
+2026-10-06T05:41:39Z	INFO	DPP_NS_SalesOrderID		Shape executed successfully in 0 ms.
+2026-10-06T05:41:39Z	INFO	Stop	continuing process	Executing Stop Shape with 1 document(s).
+2026-10-06T05:41:39Z	INFO	Stop	continuing process	Shape executed successfully in 0 ms.
+2026-10-06T05:41:39Z	INFO	cleanup...		Process execution completed normally.
+2026-10-06T05:41:39Z	INFO	Try/Catch		Shape executed successfully in 0 ms.
+2026-10-06T05:41:39Z	INFO	Process Call	passing in start data, no return data	Executing Process Call Shape with 1 document(s).
+2026-10-06T05:41:39Z	INFO	Process Call	passing in start data, no return data	Executing asynchronous process '(Sub) Update OrderStatus in SF' with 1 document(s)
+2026-10-06T05:41:39Z	INFO	Process Call	passing in start data, no return data	Shape executed successfully in 1 ms.
+2026-10-06T05:41:39Z	INFO	Front End Response		Executing Message Shape with 1 document(s).
+2026-10-06T05:41:39Z	INFO	Front End Response		Shape executed successfully in 1 ms.
+2026-10-06T05:41:39Z	INFO	Notify		Executing Notify Shape with 1 document(s).
+2026-10-06T05:41:39Z	INFO	Notify		:  { "Email": "[EMAIL]", "Customer ID": "[CUST_ID]", "NS Order ID": "SOAU1223148" }
+2026-10-06T05:41:39Z	INFO	Notify		Shape executed successfully in 0 ms.
+2026-10-06T05:41:39Z	INFO	Return Documents		Adding 1 document(s) to Return Documents return store.
+2026-10-06T05:41:39Z	INFO	Return Documents		Shape executed successfully in 0 ms.
+2026-10-06T05:41:39Z	INFO	cleanup...		Returning 1 document(s) in Return Documents return store.
+2026-10-06T05:41:40Z	INFO	cleanup...		Waited for 1 child process(es) in 561 ms.
+2026-10-06T05:41:39Z	INFO	initializing...		Executing Process (Sub) Update OrderStatus in SF
+2026-10-06T05:41:39Z	INFO	Start	Passthrough	Executing Start Shape
+2026-10-06T05:41:39Z	INFO	Start	Passthrough	Executing Passthrough Shape with 1 passed in document(s).
+2026-10-06T05:41:39Z	INFO	Start	Passthrough	1 document(s) found for processing.
+2026-10-06T05:41:39Z	INFO	Start	Passthrough	Shape executed successfully in 1 ms.
+2026-10-06T05:41:39Z	INFO	Try/Catch		Executing Try/Catch Shape with 1 document(s).
+2026-10-06T05:41:39Z	INFO	Try/Catch		Launching Try/Catch Shape fiber f_0 as execution-5f02032a-7a22-4876-ac07-6bc0c874dfd5-2026.10.06 with 1 document(s).
+2026-10-06T05:41:40Z	INFO	Try/Catch		Completed Try/Catch initial execution (shape10)
+2026-10-06T05:41:39Z	INFO	initializing...		Executing Process (Sub) Update OrderStatus in SF (Continuation f_0)
+2026-10-06T05:41:39Z	INFO	Try/Catch		Executing Try/Catch Shape continuation as f_0 with 1 document(s).
+2026-10-06T05:41:39Z	INFO	Try/Catch		Shape executed successfully in 0 ms.
+2026-10-06T05:41:39Z	INFO	Message		Executing Message Shape with 1 document(s).
+2026-10-06T05:41:39Z	INFO	Message		Shape executed successfully in 1 ms.
+2026-10-06T05:41:39Z	INFO	Map	NS - SF Order update	Executing Map with 1 document(s).
+2026-10-06T05:41:40Z	INFO	Map	NS - SF Order update	Shape executed successfully in 190 ms.
+2026-10-06T05:41:40Z	INFO	Log Req for SF Update		Executing Notify Shape with 1 document(s).
+2026-10-06T05:41:40Z	INFO	Log Req for SF Update		: <?xml version='1.0' encoding='UTF-8'?>  <Order>    <Id>8019n00000pwZoeAAE</Id>    <NetSuite_Order_ID__c>SOAU1223148</NetSuite_Order_ID__c>  </Order>
+2026-10-06T05:41:40Z	INFO	Log Req for SF Update		Shape executed successfully in 0 ms.
+2026-10-06T05:41:40Z	INFO	Connector	ICAA SFDC Connection: salesforce Connector; Salesforce Order Update Operation	Executing Connector Shape with 1 document(s).
+2026-10-06T05:41:40Z	INFO	Connector	ICAA SFDC Connection: salesforce Connector; Salesforce Order Update Operation	Shape executed successfully in 276 ms.
+2026-10-06T05:41:40Z	INFO	Log  SF Update Response		Executing Notify Shape with 1 document(s).
+2026-10-06T05:41:40Z	INFO	Log  SF Update Response		: <?xml version="1.0" encoding="UTF-8" standalone="no"?><Order><id>8019n00000pwZoeAAE</id><success>true</success></Order>
+2026-10-06T05:41:40Z	INFO	Log  SF Update Response		Shape executed successfully in 0 ms.
+2026-10-06T05:41:40Z	INFO	Success?		Executing Decision with 1 document(s).
+2026-10-06T05:41:40Z	INFO	Success?		Shape executed successfully in 5 ms.
+2026-10-06T05:41:40Z	INFO	Stop	continuing process	Executing Stop Shape with 1 document(s).
+2026-10-06T05:41:40Z	INFO	Stop	continuing process	Shape executed successfully in 0 ms.
+2026-10-06T05:41:40Z	INFO	cleanup...		Process execution completed normally.
+2026-10-06T05:41:40Z	INFO	Try/Catch		Shape executed successfully in 2 ms.
+2026-10-06T05:41:40Z	INFO	cleanup...		Process execution completed normally.
+2026-10-06T05:41:40Z	INFO	cleanup...		Process execution completed normally.
+2026-10-06T05:41:40Z	INFO	Try/Catch		Shape executed successfully in 1 ms.
+2026-10-06T05:41:40Z	INFO	Return Order Creation Responses		Adding 1 document(s) to Return Documents return store.
+2026-10-06T05:41:40Z	INFO	Return Order Creation Responses		Shape executed successfully in 0 ms.
+2026-10-06T05:41:40Z	INFO	cleanup...		Returning 1 document(s) in Return Documents return store.
+2026-10-06T05:41:40Z	INFO	cleanup...		Process execution completed normally.
+2026-10-06T05:41:40Z	INFO	Try/Catch		Shape executed successfully in 1 ms.
+2026-10-06T05:41:40Z	INFO	cleanup...		Process execution completed normally.

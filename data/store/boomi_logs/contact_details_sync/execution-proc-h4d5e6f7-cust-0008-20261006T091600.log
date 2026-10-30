@@ -1,0 +1,22 @@
+2026-10-06T09:16:00Z	INFO	initializing...		Executing Process ContactDetailsSyncProcess
+2026-10-06T09:16:00Z	INFO	Start	Passthrough	Executing Start Shape with 1 document(s).
+2026-10-06T09:16:00Z	INFO	Document context		{"documentId": "doc-cust-0008", "customerId": "CUST-0008", "memberId": "MEM-0008", "email": "member8@example.com", "customerName": "Demo Member 8"}
+2026-10-06T09:16:01Z	INFO	Salesforce optional enrichment	Salesforce Connection: salesforce Connector	Executing Connector Shape with 1 document(s).
+2026-10-06T09:16:01Z	WARNING	Salesforce optional enrichment	Salesforce Connection: salesforce Connector	Document doc-cust-0008: WARNING: Optional campaign label unavailable. Fallback label used; processing continued.
+2026-10-06T09:16:01Z	INFO	Salesforce optional enrichment	Salesforce Connection: salesforce Connector	Shape executed successfully in 100 ms.
+2026-10-06T09:16:01.100Z	INFO	Salesforce optional locale enrichment	Salesforce Connection: salesforce Connector	Executing Connector Shape with 1 document(s).
+2026-10-06T09:16:01.100Z	SEVERE	Salesforce optional locale enrichment	Salesforce Connection: salesforce Connector	Document doc-cust-0008: Salesforce response: REQUEST_LIMIT_EXCEEDED during optional locale lookup; retry scheduled.
+2026-10-06T09:16:01.100Z	INFO	Salesforce optional locale enrichment	Salesforce Connection: salesforce Connector	Shape executed with errors in 100 ms.
+2026-10-06T09:16:01.200Z	INFO	Salesforce optional locale enrichment	Salesforce Connection: salesforce Connector	Executing Connector Shape with 1 document(s).
+2026-10-06T09:16:01.200Z	INFO	Salesforce optional locale enrichment	Salesforce Connection: salesforce Connector	Document doc-cust-0008: Retry response: HTTP 200; locale retrieved and enrichment branch completed successfully.
+2026-10-06T09:16:01.200Z	INFO	Salesforce optional locale enrichment	Salesforce Connection: salesforce Connector	Shape executed successfully in 100 ms.
+2026-10-06T09:16:01.300Z	INFO	Boomi audit delivery		Executing Connector Shape with 1 document(s).
+2026-10-06T09:16:01.300Z	SEVERE	Boomi audit delivery		Document doc-cust-0008: Monitoring endpoint response: HTTP 503 Service Unavailable while sending the execution audit event.
+2026-10-06T09:16:01.300Z	INFO	Boomi audit delivery		Shape executed with errors in 100 ms.
+2026-10-06T09:16:01.400Z	INFO	Boomi audit delivery		Executing Connector Shape with 1 document(s).
+2026-10-06T09:16:01.400Z	INFO	Boomi audit delivery		Document doc-cust-0008: Audit event persisted to the local delivery buffer; nonblocking audit branch completed and member-record processing continued.
+2026-10-06T09:16:01.400Z	INFO	Boomi audit delivery		Shape executed successfully in 100 ms.
+2026-10-06T09:16:02Z	INFO	NetSuite customer upsert	Netsuite Connection: netsuitesdk Connector	Executing Connector Shape with 1 document(s).
+2026-10-06T09:16:02Z	SEVERE	NetSuite customer upsert	Netsuite Connection: netsuitesdk Connector	Document doc-cust-0008: NetSuite Error: Nonexistent externalId CUST-0008; referenced customer record not found.
+2026-10-06T09:16:02Z	INFO	NetSuite customer upsert	Netsuite Connection: netsuitesdk Connector	Shape executed with errors in 100 ms.
+2026-10-06T09:16:04Z	INFO	cleanup...		Process execution completed with errors.

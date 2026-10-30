@@ -1,0 +1,97 @@
+{
+  "entries": [
+    {
+      "term": "QPR",
+      "expansion": "Quality Performance Review",
+      "aliases": [
+        "quality performance review",
+        "QPR evidence"
+      ],
+      "classification_hint": "Application Support",
+      "context": "A technical failure in QPR may be an application issue; the integration is not mapped in this first pass.",
+      "process_ids": []
+    },
+    {
+      "term": "CPD",
+      "expansion": "Continued Professional Development",
+      "aliases": [
+        "continued professional development",
+        "CPD recording"
+      ],
+      "classification_hint": null,
+      "context": "How-to or policy questions can be Education; an application failing to save requires technical assessment. CPDDeclarationIngestion is a candidate for technical declaration failures, with no retained process article or logs.",
+      "process_ids": [
+        "proc-i5e6f7g8"
+      ]
+    },
+    {
+      "term": "employment history",
+      "expansion": null,
+      "aliases": [
+        "employment details",
+        "employer change",
+        "professional history"
+      ],
+      "classification_hint": "Application Support",
+      "context": "Reported save or synchronization failure in employment details.",
+      "process_ids": [
+        "proc-e1a2b3c4"
+      ]
+    },
+    {
+      "term": "member profile",
+      "expansion": null,
+      "aliases": [
+        "customer attributes",
+        "member details",
+        "contact details",
+        "profile sync"
+      ],
+      "classification_hint": "Application Support",
+      "context": "Reported contact/member-profile synchronization failure across Salesforce, NetSuite or Sitecore.",
+      "process_ids": [
+        "proc-h4d5e6f7"
+      ]
+    },
+    {
+      "term": "checkout",
+      "expansion": null,
+      "aliases": [
+        "proceed to checkout",
+        "sales order",
+        "order line",
+        "membership renewal",
+        "membership upgrade"
+      ],
+      "classification_hint": "Application Support",
+      "context": "Member checkout or integrated sales-order failure.",
+      "process_ids": [
+        "proc-f2b3c4d5"
+      ]
+    },
+    {
+      "term": "ECR",
+      "expansion": null,
+      "aliases": [
+        "cash sale",
+        "ecr order update"
+      ],
+      "classification_hint": "Application Support",
+      "context": "Failure transferring incoming ECR orders into NetSuite cash sales.",
+      "process_ids": [
+        "proc-k7g8h9i0"
+      ]
+    },
+    {
+      "term": "connectivity",
+      "expansion": null,
+      "aliases": [
+        "office network",
+        "network cable"
+      ],
+      "classification_hint": "Infrastructure",
+      "context": "Local connectivity failure without evidence of an application integration failure.",
+      "process_ids": []
+    }
+  ]
+}

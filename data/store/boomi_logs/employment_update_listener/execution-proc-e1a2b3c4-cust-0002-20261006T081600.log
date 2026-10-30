@@ -1,0 +1,7 @@
+2026-10-06T08:16:00Z	INFO	initializing...		Executing Process EmploymentUpdateListener
+2026-10-06T08:16:00Z	INFO	Start	Passthrough	Executing Start Shape with 1 document(s).
+2026-10-06T08:16:00Z	INFO	Document context		{"documentId": "doc-cust-0002", "customerId": "CUST-0002", "memberId": "MEM-0002", "email": "member2@example.com", "customerName": "Demo Member 2"}
+2026-10-06T08:16:01Z	INFO	Salesforce source query	Salesforce Connection: salesforce Connector	Executing Connector Shape with 1 document(s).
+2026-10-06T08:16:01Z	SEVERE	Salesforce source query	Salesforce Connection: salesforce Connector	Document doc-cust-0002: Salesforce response: FIELD_CUSTOM_VALIDATION_EXCEPTION: Employment end date precedes start date. Source query failed; no NetSuite write attempted.
+2026-10-06T08:16:01Z	INFO	Salesforce source query	Salesforce Connection: salesforce Connector	Shape executed with errors in 100 ms.
+2026-10-06T08:16:04Z	INFO	cleanup...		Process execution completed with errors.

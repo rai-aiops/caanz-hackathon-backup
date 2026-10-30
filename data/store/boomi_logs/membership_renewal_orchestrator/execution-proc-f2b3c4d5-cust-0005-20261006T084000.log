@@ -1,0 +1,7 @@
+2026-10-06T08:40:00Z	INFO	initializing...		Executing Process MembershipRenewalOrchestrator
+2026-10-06T08:40:00Z	INFO	Start	Passthrough	Executing Start Shape with 1 document(s).
+2026-10-06T08:40:00Z	INFO	Document context		{"documentId": "doc-cust-0005", "customerId": "CUST-0005", "memberId": "MEM-0005", "email": "member5@example.com", "customerName": "Demo Member 5"}
+2026-10-06T08:40:01Z	INFO	Connector response		Executing Connector Shape with 1 document(s).
+2026-10-06T08:40:01Z	INFO	Connector response		Document doc-cust-0005: NetSuite response: {"success":true}; Salesforce response: {"success":true}.
+2026-10-06T08:40:01Z	INFO	Connector response		Shape executed successfully in 100 ms.
+2026-10-06T08:40:04Z	INFO	cleanup...		Process execution completed normally.
