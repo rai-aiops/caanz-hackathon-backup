@@ -76,7 +76,7 @@ def _normalize(value: str) -> str:
     return " ".join(value.split()).casefold()
 
 
-# TODO: Turn into a function tool and attach relevant tool guardrails
+@function_tool
 def inspect_boomi_log_tool(
     process_id: str,
     incident_timestamp: AwareDatetime,

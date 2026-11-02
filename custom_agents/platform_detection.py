@@ -8,14 +8,47 @@ from pydantic import BaseModel, Field
 # TODO: Import specialist guardrails
 # from guardrails import ()
 
-# TODO: Import specialist tools
 from tools import (
     FreshserviceTicketId,
+    lookup_dependency_map_tool,
+    lookup_access_layer_tool,
+    lookup_confluence_knowledge_base_tool,
+    inspect_boomi_log_tool,
+    update_ticket_platform_tool
 )
 
 
-# TODO: Implement Platform Detection Prompt
 PLATFORM_DETECTION_PROMPT = """
+Applications Platform Detection Agent
+
+Persona: Application Platform Detection Specialist
+
+Goal: To inspect Boomi logs, identify the root cause of an issue, and assign the ticket to the correct platform team. 
+
+Knowledge:
+Dependency Map
+Confluence Knowledge Base - Boomi Processes
+Confluence Knowledge Base - Access Layer
+Boomi Logs (Boomi Platform Lookup)
+Platform Teams: Sitecore, Salesforce, Boomi, Netsuite
+
+Required Data: 
+• Any of: Customer ID, Member ID, Customer Name, Customer Email
+• Timestamp of incident
+
+Rules: 
+
+Instructions:
+
+Standard Procedure:
+1. Confirm the ticket has all of the required data. If not, draft a follow up email to the requestor asking for the missing data pieces and return the draft to the manager. Stop procedure. 
+2. Lookup Dependency Map using lookup Lookup Dependency Map Tool.
+3. Lookup the Access Layer document using the Lookup Access Layer Tool. Based on the email context, identify which layers may be affected by the issue.
+4. Keyword lookup from email body and access layer to confluence API using Confluence Knowledge Base Lookup Tool to retrieve relevant process documentation and identify suspect Boomi processes to inspect.
+5. (Note: may need to translate other identifiers to customer ID in future versions)
+6. Lookup and parse Boomi logs using Inspect Boomi Log Tool based on identified processes, customer ID (or alternatives), and timestamp to try and find any error messages.
+7. If an error message is found, identify the relevant platform in the error message. Assign the ticket to the appropriate platform team using the Update Ticket Platform Tool. Additionally, return documentation from the Boomi process as well as the Boomi log error as a drafted ticket comment to the manager. Otherwise, continue to investigate additional Boomi processes. 
+8. If an error message cannot be found, return a drafted comment to the manager summarizing the investigation steps already taken. End workflow with status manual review.
 """.strip()
 
 
@@ -25,7 +58,12 @@ class RequesterReplyDraft(BaseModel):
         subject: Subject for the manager's Freshservice requester reply. (Type: str)
         body: One requester-facing request for the missing incident facts. (Type: str)
     """
-    pass  # TODO: Implement fields for RequesterReplyDraft
+    subject: Annotated[str, Field(
+            description="Subject for the manager's Freshservice requester reply.",
+        )]
+    body: Annotated[str, Field(
+        description="One requester-facing request for the missing incident facts.",
+    )]
 
 
 class PlatformDetectionOutput(BaseModel):
@@ -45,7 +83,94 @@ class PlatformDetectionOutput(BaseModel):
         confidence: Confidence in the returned decision, including manual review, not an unknown platform; below 0.90 stops for human review. (Type: float; Range: 0 to 1 inclusive)
         confidence_reason: Evidence and uncertainty supporting the confidence score. (Type: str)
     """
-    pass  # TODO: Implement fields for PlatformDetectionOutput
+    ticket_id: Annotated[FreshserviceTicketId, Field(
+        description="Ticket supplied by the manager.",
+    )]
+    status: Annotated[ Literal['application_support_assigned', 'platform_assigned', 'manual_review', 'failed'], Field(
+        description="Verified classification, platform routing or required human review.",
+    )]
+    platform: Annotated[
+    Literal['Sitecore', 'Salesforce', 'Boomi', 'NetSuite'] | None,
+    Field(
+        description="Platform actually assigned, or null when assignment was not possible.",
+    )]
+    missing_information: Annotated[
+        list[str],
+        Field(
+            description="Required incident facts absent from the current ticket.",
+        ),
+    ]
+    reply_draft: Annotated[
+        RequesterReplyDraft | None,
+        Field(
+            description="Missing-information reply for the manager to send; never sent by this agent.",
+        ),
+    ]
+
+    drafted_comment: Annotated[
+        str | None,
+        Field(
+            description="Findings and investigation steps for the manager to save as a private note, including retrieved Boomi log lines verbatim in fenced text code blocks with process IDs and log path/one-based line ranges when available.",
+        ),
+    ]
+
+    process_ids: Annotated[
+        list[str],
+        Field(
+            description="Candidate process IDs investigated using retrieved documentation.",
+        ),
+    ]
+
+    execution_ids: Annotated[
+        list[str],
+        Field(
+            description="All execution IDs actually retrieved and inspected; empty if none matched.",
+        ),
+    ]
+
+    evidence_references: Annotated[
+        list[str],
+        Field(
+            description="Retrieved document/process/execution IDs and log path/one-based line references supporting findings.",
+        ),
+    ]
+
+    errors: Annotated[
+        list[str],
+        Field(
+            description="Verified blocking errors; inconclusive evidence belongs in the drafted comment.",
+        ),
+    ]
+
+    sources_used: Annotated[
+        list[
+            Literal[
+                'freshservice_knowledge_base',
+                'confluence',
+                'ticket_history',
+                'applications_support_keywords',
+            ]
+        ],
+        Field(
+            description="Knowledge sources that meaningfully contributed to this decision, as source literals; empty when none contributed.",
+        ),
+    ]
+
+    confidence: Annotated[
+        float,
+        Field(
+            ge=0,
+            le=1,
+            description="Confidence in the returned decision, including manual review, not an unknown platform; below 0.90 stops for human review.",
+        ),
+    ]
+
+    confidence_reason: Annotated[
+        str,
+        Field(
+            description="Evidence and uncertainty supporting the confidence score.",
+        ),
+    ]
 
 
 def make_platform_detection_agent() -> Agent:
@@ -56,7 +181,11 @@ def make_platform_detection_agent() -> Agent:
         model="gpt-6.1-terra",
         model_settings=ModelSettings(tool_choice="auto"),
         tools=[
-            # TODO: Add specialist tools
+                lookup_dependency_map_tool,
+                lookup_access_layer_tool,
+                lookup_confluence_knowledge_base_tool,
+                inspect_boomi_log_tool,
+                update_ticket_platform_tool
         ],
         input_guardrails=[], # TODO: Add specialist input guardrails
         output_guardrails=[], # TODO: Add specialist output guardrails

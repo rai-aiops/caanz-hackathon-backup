@@ -50,7 +50,7 @@ def lookup_dependency_map_tool() -> ConfluencePage:
     return ConfluencePage.model_validate(read_store("confluence_dependency_map.json"))
 
 
-# TODO: Turn into a function tool and attach relevant tool guardrails
+@function_tool
 def lookup_access_layer_tool() -> ConfluencePage:
     """Read the separate system architecture and Access Layer page.
 
@@ -63,7 +63,7 @@ def lookup_access_layer_tool() -> ConfluencePage:
     return ConfluencePage.model_validate(read_store("confluence_access_layer.json"))
 
 
-# TODO: Turn into a function tool and attach relevant tool guardrails
+@function_tool
 def lookup_confluence_knowledge_base_tool(
     query: str, limit: int = 10
 ) -> ConfluenceSearchResult:
