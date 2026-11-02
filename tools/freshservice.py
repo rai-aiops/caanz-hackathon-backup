@@ -122,7 +122,7 @@ class FreshserviceTagsResult(BaseModel):
     tagging_guidelines: str
 
 
-# TODO: Turn into a function tool and attach relevant tool guardrails
+@function_tool
 def lookup_ticket_data_tool(
     ticket_id: FreshserviceTicketId,
 ) -> FreshserviceTicket:

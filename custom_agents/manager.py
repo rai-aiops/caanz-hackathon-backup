@@ -13,6 +13,7 @@ from tools import (
     FreshserviceMessage,
     FreshserviceNote,
     FreshserviceTicketId,
+    lookup_ticket_data_tool
 )
 
 
@@ -35,7 +36,7 @@ KNOWLEDGE_UPDATE_TOOL_DESCRIPTION = """
 
 # TODO: Implement Manager Prompt
 MANAGER_AGENT_PROMPT = """
-You are a temporary manager agent. Your job is to respond to user prompts. Always call the application agent.
+You are a temporary manager agent. Your job is to respond to user prompts. Always lookup the ticket using lookup_ticket_data_tool, then call the application agent and be sure to pass it the ticket data.
 """.strip()
 
 
@@ -70,13 +71,14 @@ def make_manager_agent(hooks: RunHooks | None = None) -> Agent:
         model="gpt-6.1-terra",
         model_settings=ModelSettings(tool_choice="auto"),
         tools=[
-        assignment.as_tool(
+            assignment.as_tool(
                 tool_name="freshservice_applications_assignment_agent",
                 tool_description=APPLICATIONS_ASSIGNMENT_TOOL_DESCRIPTION,
                 max_turns=MAX_TURNS_SPECIALIST,
                 hooks=hooks,
                 failure_error_function=None,
             ),
+            lookup_ticket_data_tool
         ],
         input_guardrails=[], # TODO: Add manager input guardrails
         output_guardrails=[], # TODO: Add manager output guardrails
