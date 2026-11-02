@@ -271,7 +271,7 @@ def get_acknowledgement_template_tool() -> FreshserviceTemplateResult:
     )
 
 
-# TODO: Turn into a function tool and attach relevant tool guardrails
+@function_tool
 def lookup_freshservice_tags_tool() -> FreshserviceTagsResult:
     """Retrieve existing ticket tags and tagging guidelines.
 
@@ -440,7 +440,7 @@ def send_reply_tool(
     return message
 
 
-# TODO: Turn into a function tool and attach relevant tool guardrails
+@function_tool
 def update_freshservice_ticket_tags_tool(
     ticket_id: FreshserviceTicketId,
     tags: list[str],

@@ -19,6 +19,7 @@ from tools import (
 
 from .applications_assignment import make_applications_assignment_agent
 from .platform_detection import make_platform_detection_agent
+from .knowledge_update import make_knowledge_update_agent
 
 MAX_TURNS_SPECIALIST = 50
 
@@ -31,8 +32,8 @@ PLATFORM_DETECTION_TOOL_DESCRIPTION = """
 A specialist that attempts to assign tickets to the right platform by inspecting the confluence knowledge base and boomi logs.
 """.strip()
 
-# TODO: Implement Knowledge Update Specialist Description
 KNOWLEDGE_UPDATE_TOOL_DESCRIPTION = """
+A specialist that makes recommendations to the knowledge base after a ticekt is closed.
 """.strip()
 
 MANAGER_AGENT_PROMPT = """
@@ -66,6 +67,8 @@ def make_manager_agent(hooks: RunHooks | None = None) -> Agent:
     """Create the CAANZ manager with the PRD's three specialist tools."""
     assignment = make_applications_assignment_agent()
     detection = make_platform_detection_agent()
+    knowledge = make_knowledge_update_agent
+
     return Agent(
         name="CAANZ Manager Agent",
         instructions=MANAGER_AGENT_PROMPT,
@@ -82,6 +85,13 @@ def make_manager_agent(hooks: RunHooks | None = None) -> Agent:
             detection.as_tool(
                 tool_name="applications_platform_detection_agent",
                 tool_description=PLATFORM_DETECTION_TOOL_DESCRIPTION,
+                max_turns=MAX_TURNS_SPECIALIST,
+                hooks=hooks,
+                failure_error_function=None,
+            ), 
+            knowledge.as_tool(
+                tool_name="freshservice_confluence_knowledge_update_agent",
+                tool_description=KNOWLEDGE_UPDATE_TOOL_DESCRIPTION,
                 max_turns=MAX_TURNS_SPECIALIST,
                 hooks=hooks,
                 failure_error_function=None,
