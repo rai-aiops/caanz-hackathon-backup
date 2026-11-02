@@ -140,7 +140,7 @@ def lookup_ticket_data_tool(
     return FreshserviceTicket.model_validate(entry["ticket"])
 
 
-# TODO: Turn into a function tool and attach relevant tool guardrails
+@function_tool
 def lookup_freshservice_categories_tool() -> FreshserviceCategoriesResult:
     """Read classification, category and subcategory options from the local catalog.
 
@@ -157,7 +157,7 @@ def lookup_freshservice_categories_tool() -> FreshserviceCategoriesResult:
     )
 
 
-# TODO: Turn into a function tool and attach relevant tool guardrails
+@function_tool
 def lookup_applications_support_keywords_tool(
     query: str = "", limit: int = 10
 ) -> FreshserviceSearchResult:
@@ -232,7 +232,7 @@ def lookup_freshservice_historical_tickets_tool(
     )
 
 
-# TODO: Turn into a function tool and attach relevant tool guardrails
+@function_tool
 def lookup_freshservice_knowledge_base_tool(
     query: str, limit: int = 10
 ) -> FreshserviceSearchResult:
@@ -256,7 +256,7 @@ def lookup_freshservice_knowledge_base_tool(
     )
 
 
-# TODO: Turn into a function tool and attach relevant tool guardrails
+@function_tool
 def get_acknowledgement_template_tool() -> FreshserviceTemplateResult:
     """Retrieve the acknowledgement template without sending a message.
 
@@ -288,7 +288,7 @@ def lookup_freshservice_tags_tool() -> FreshserviceTagsResult:
     )
 
 
-# TODO: Turn into a function tool and attach relevant tool guardrails
+@function_tool
 def update_ticket_classification_tool(
     ticket_id: FreshserviceTicketId,
     classification: str,
@@ -324,7 +324,7 @@ def update_ticket_classification_tool(
         return result
 
 
-# TODO: Turn into a function tool and attach relevant tool guardrails
+@function_tool
 def update_ticket_platform_tool(
     ticket_id: FreshserviceTicketId,
     platform: str,

@@ -15,13 +15,14 @@ from tools import (
     FreshserviceTicketId,
 )
 
-# TODO: Import specialist agents (hint: import make_[specialist_agent] functions from their modules)
 
+from . import make_applications_assignment_agent
 
 MAX_TURNS_SPECIALIST = 50
 
 # TODO: Implement Applications Assignment Specialist Description
 APPLICATIONS_ASSIGNMENT_TOOL_DESCRIPTION = """
+A specialist attempts to classify the ticket and assign it to either application support infrusture or education. 
 """.strip()
 
 # TODO: Implement Platform Detection Specialist Description
@@ -34,7 +35,7 @@ KNOWLEDGE_UPDATE_TOOL_DESCRIPTION = """
 
 # TODO: Implement Manager Prompt
 MANAGER_AGENT_PROMPT = """
-You are a temporary manager agent. Your job is to respond to user prompts.
+You are a temporary manager agent. Your job is to respond to user prompts. Always call the application agent.
 """.strip()
 
 
@@ -62,17 +63,24 @@ class ManagerOutput(BaseModel):
 
 def make_manager_agent(hooks: RunHooks | None = None) -> Agent:
     """Create the CAANZ manager with the PRD's three specialist tools."""
+    assignment = make_applications_assignment_agent()
     return Agent(
         name="CAANZ Manager Agent",
         instructions=MANAGER_AGENT_PROMPT,
         model="gpt-6.1-terra",
         model_settings=ModelSettings(tool_choice="auto"),
         tools=[
-            # TODO: Add manager tools
+        assignment.as_tool(
+                tool_name="freshservice_applications_assignment_agent",
+                tool_description=APPLICATIONS_ASSIGNMENT_TOOL_DESCRIPTION,
+                max_turns=MAX_TURNS_SPECIALIST,
+                hooks=hooks,
+                failure_error_function=None,
+            ),
         ],
         input_guardrails=[], # TODO: Add manager input guardrails
         output_guardrails=[], # TODO: Add manager output guardrails
-        output_type=ManagerOutput,
+        # output_type=ManagerOutput,
     )
 
 

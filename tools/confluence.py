@@ -37,7 +37,7 @@ class ConfluenceSearchResult(BaseModel):
     matches: list[ConfluenceSearchMatch]
 
 
-# TODO: Turn into a function tool and attach relevant tool guardrails
+@function_tool
 def lookup_dependency_map_tool() -> ConfluencePage:
     """Read the dependency-map page, including its documented uncertainty and gaps.
 
