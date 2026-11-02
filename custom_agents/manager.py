@@ -246,7 +246,7 @@ def make_manager_agent(hooks: RunHooks | None = None) -> Agent:
     """Create the CAANZ manager with the PRD's three specialist tools."""
     assignment = make_applications_assignment_agent()
     detection = make_platform_detection_agent()
-    knowledge = make_knowledge_update_agent
+    knowledge = make_knowledge_update_agent()
 
     return Agent(
         name="CAANZ Manager Agent",
@@ -281,7 +281,7 @@ def make_manager_agent(hooks: RunHooks | None = None) -> Agent:
         ],
         input_guardrails=[], # TODO: Add manager input guardrails
         output_guardrails=[], # TODO: Add manager output guardrails
-        # output_type=ManagerOutput,
+        output_type=ManagerOutput,
     )
 
 
