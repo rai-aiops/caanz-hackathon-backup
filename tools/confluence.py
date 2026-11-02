@@ -103,7 +103,7 @@ def lookup_confluence_knowledge_base_tool(
     )
 
 
-# TODO: Turn into a function tool and attach relevant tool guardrails
+@function_tool
 def create_confluence_draft_tool(
     source_ticket_id: str,
     target_record_id: str,

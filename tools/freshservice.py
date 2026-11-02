@@ -181,7 +181,7 @@ def lookup_applications_support_keywords_tool(
     )
 
 
-# TODO: Turn into a function tool and attach relevant tool guardrails
+@function_tool
 def lookup_freshservice_historical_tickets_tool(
     query: Annotated[str, Field(min_length=1)],
     current_ticket_id: FreshserviceTicketId,
@@ -369,7 +369,7 @@ def update_ticket_platform_tool(
         return result
 
 
-# TODO: Turn into a function tool and attach relevant tool guardrails
+@function_tool
 def add_private_note_tool(
     ticket_id: FreshserviceTicketId,
     body: Annotated[str, Field(min_length=1)],
@@ -401,7 +401,7 @@ def add_private_note_tool(
     return note
 
 
-# TODO: Turn into a function tool and attach relevant tool guardrails
+@function_tool
 def send_reply_tool(
     ticket_id: FreshserviceTicketId,
     subject: Annotated[str, Field(min_length=1)],

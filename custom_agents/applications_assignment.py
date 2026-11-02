@@ -9,7 +9,8 @@ from pydantic import BaseModel, Field
 # from guardrails import ()
 
 from tools import (
-    FreshserviceTicketId, lookup_dependency_map_tool, lookup_applications_support_keywords_tool, lookup_freshservice_knowledge_base_tool, update_ticket_classification_tool, update_ticket_platform_tool, get_acknowledgement_template_tool, lookup_freshservice_categories_tool
+    FreshserviceTicketId, lookup_dependency_map_tool, 
+    lookup_applications_support_keywords_tool, lookup_freshservice_knowledge_base_tool, update_ticket_classification_tool, update_ticket_platform_tool, get_acknowledgement_template_tool, lookup_freshservice_categories_tool, lookup_freshservice_historical_tickets_tool
 )
 
 APPLICATIONS_ASSIGNMENT_PROMPT = """
@@ -105,7 +106,7 @@ def make_applications_assignment_agent() -> Agent:
         model="gpt-6.1-terra",
         model_settings=ModelSettings(tool_choice="auto"),
         tools=[
-        lookup_dependency_map_tool, lookup_applications_support_keywords_tool, lookup_freshservice_knowledge_base_tool, update_ticket_classification_tool, update_ticket_platform_tool, get_acknowledgement_template_tool, lookup_freshservice_categories_tool
+        lookup_dependency_map_tool, lookup_applications_support_keywords_tool, lookup_freshservice_knowledge_base_tool, update_ticket_classification_tool, update_ticket_platform_tool, get_acknowledgement_template_tool, lookup_freshservice_categories_tool, lookup_freshservice_historical_tickets_tool
         ],
         input_guardrails=[], # TODO: Add specialist input guardrails
         output_guardrails=[], # TODO: Add specialist output guardrails
