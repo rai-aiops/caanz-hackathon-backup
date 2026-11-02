@@ -5,8 +5,7 @@ from typing import Annotated, Literal
 from agents import Agent, ModelSettings
 from pydantic import BaseModel, Field
 
-# TODO: Import specialist guardrails
-# from guardrails import ()
+from guardrails import (analysis_confidence_guardrail)
 
 from tools import (
     FreshserviceTicketId,
@@ -187,8 +186,8 @@ def make_platform_detection_agent() -> Agent:
                 inspect_boomi_log_tool,
                 update_ticket_platform_tool
         ],
-        input_guardrails=[], # TODO: Add specialist input guardrails
-        output_guardrails=[], # TODO: Add specialist output guardrails
+        input_guardrails=[],
+        output_guardrails=[analysis_confidence_guardrail],
         output_type=PlatformDetectionOutput,
     )
 

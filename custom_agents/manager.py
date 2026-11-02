@@ -5,8 +5,7 @@ from typing import Annotated, Literal
 from agents import Agent, ModelSettings, RunHooks
 from pydantic import BaseModel, Field
 
-# TODO: Import manager guardrails
-# from guardrails import () 
+from guardrails import (analysis_confidence_guardrail, prompt_injection_and_malware_guardrail) 
 
 # TODO: Import manager tools
 from tools import (
@@ -25,7 +24,6 @@ from .knowledge_update import make_knowledge_update_agent
 
 MAX_TURNS_SPECIALIST = 50
 
-# TODO: Implement Applications Assignment Specialist Description
 APPLICATIONS_ASSIGNMENT_TOOL_DESCRIPTION = """
 A specialist attempts to classify the ticket and assign it to either application support infrusture or education. 
 """.strip()
@@ -116,128 +114,128 @@ class ManagerOutput(BaseModel):
     Field(
         description="Outcome of this trigger procedure, separate from persisted ticket status.",
     ),
-]
+    ]
 
-trigger_type: Annotated[
-    Literal[
-        'new_ticket',
-        'requester_update',
-        'resolution_confirmed',
-        'confirmation_timeout',
-    ] | None,
-    Field(
-        description="Structured CAANZ trigger handled, or null when invalid.",
-    ),
-]
-
-ticket_id: Annotated[
-    FreshserviceTicketId | None,
-    Field(
-        description="Associated ticket, or null when no valid ID was supplied.",
-    ),
-]
-
-classification: Annotated[
-    Literal[
-        'Application Support',
-        'Infrastructure',
-        'Education',
-    ] | None,
-    Field(
-        description="Current classification read from the persisted ticket.",
-    ),
-]
-
-platform: Annotated[
-    Literal[
-        'Sitecore',
-        'Salesforce',
-        'Boomi',
-        'NetSuite',
-    ] | None,
-    Field(
-        description="Current platform read from the persisted ticket.",
-    ),
-]
-
-ticket_status: Annotated[
-    str | None,
-    Field(
-        description="Actual persisted ticket status; not an inferred waiting/manual-review transition.",
-    ),
-]
-
-private_notes: Annotated[
-    list[FreshserviceNote],
-    Field(
-        description="Private notes confirmed saved during this trigger procedure.",
-    ),
-]
-
-sent_reply: Annotated[
-    FreshserviceMessage | None,
-    Field(
-        description="Requester reply confirmed saved by Send Reply Tool, if any.",
-    ),
-]
-
-confluence_draft_ids: Annotated[
-    list[str],
-    Field(
-        description="Administrator-review draft IDs confirmed saved by the specialist.",
-    ),
-]
-
-summary: Annotated[
-    str,
-    Field(
-        description="Concise summary of verified actions, routing and current outcome.",
-    ),
-]
-
-next_action: Annotated[
-    str | None,
-    Field(
-        description="Required requester, human or application action; null when this procedure is complete.",
-    ),
-]
-
-errors: Annotated[
-    list[str],
-    Field(
-        description="Verified blocking errors or missing required application input/state.",
-    ),
-]
-
-sources_used: Annotated[
-    list[
+    trigger_type: Annotated[
         Literal[
-            'freshservice_knowledge_base',
-            'confluence',
-            'ticket_history',
-            'applications_support_keywords',
-        ]
-    ],
-    Field(
-        description="Knowledge sources that meaningfully contributed to this decision, as source literals; empty when none contributed.",
-    ),
-]
+            'new_ticket',
+            'requester_update',
+            'resolution_confirmed',
+            'confirmation_timeout',
+        ] | None,
+        Field(
+            description="Structured CAANZ trigger handled, or null when invalid.",
+        ),
+    ]
 
-confidence: Annotated[
-    float,
-    Field(
-        ge=0,
-        le=1,
-        description="Confidence in the orchestration outcome, from 0 to 1 inclusive; outputs below 0.90 stop for human review.",
-    ),
-]
+    ticket_id: Annotated[
+        FreshserviceTicketId | None,
+        Field(
+            description="Associated ticket, or null when no valid ID was supplied.",
+        ),
+    ]
 
-confidence_reason: Annotated[
-    str,
-    Field(
-        description="Evidence and uncertainty supporting the confidence score.",
-    ),
-]
+    classification: Annotated[
+        Literal[
+            'Application Support',
+            'Infrastructure',
+            'Education',
+        ] | None,
+        Field(
+            description="Current classification read from the persisted ticket.",
+        ),
+    ]
+
+    platform: Annotated[
+        Literal[
+            'Sitecore',
+            'Salesforce',
+            'Boomi',
+            'NetSuite',
+        ] | None,
+        Field(
+            description="Current platform read from the persisted ticket.",
+        ),
+    ]
+
+    ticket_status: Annotated[
+        str | None,
+        Field(
+            description="Actual persisted ticket status; not an inferred waiting/manual-review transition.",
+        ),
+    ]
+
+    private_notes: Annotated[
+        list[FreshserviceNote],
+        Field(
+            description="Private notes confirmed saved during this trigger procedure.",
+        ),
+    ]
+
+    sent_reply: Annotated[
+        FreshserviceMessage | None,
+        Field(
+            description="Requester reply confirmed saved by Send Reply Tool, if any.",
+        ),
+    ]
+
+    confluence_draft_ids: Annotated[
+        list[str],
+        Field(
+            description="Administrator-review draft IDs confirmed saved by the specialist.",
+        ),
+    ]
+
+    summary: Annotated[
+        str,
+        Field(
+            description="Concise summary of verified actions, routing and current outcome.",
+        ),
+    ]
+
+    next_action: Annotated[
+        str | None,
+        Field(
+            description="Required requester, human or application action; null when this procedure is complete.",
+        ),
+    ]
+
+    errors: Annotated[
+        list[str],
+        Field(
+            description="Verified blocking errors or missing required application input/state.",
+        ),
+    ]
+
+    sources_used: Annotated[
+        list[
+            Literal[
+                'freshservice_knowledge_base',
+                'confluence',
+                'ticket_history',
+                'applications_support_keywords',
+            ]
+        ],
+        Field(
+            description="Knowledge sources that meaningfully contributed to this decision, as source literals; empty when none contributed.",
+        ),
+    ]
+
+    confidence: Annotated[
+        float,
+        Field(
+            ge=0,
+            le=1,
+            description="Confidence in the orchestration outcome, from 0 to 1 inclusive; outputs below 0.90 stop for human review.",
+        ),
+    ]
+
+    confidence_reason: Annotated[
+        str,
+        Field(
+            description="Evidence and uncertainty supporting the confidence score.",
+        ),
+    ]
 
     
 
@@ -279,8 +277,8 @@ def make_manager_agent(hooks: RunHooks | None = None) -> Agent:
             add_private_note_tool,
             send_reply_tool
         ],
-        input_guardrails=[], # TODO: Add manager input guardrails
-        output_guardrails=[], # TODO: Add manager output guardrails
+        input_guardrails=[prompt_injection_and_malware_guardrail],
+        output_guardrails=[analysis_confidence_guardrail],
         output_type=ManagerOutput,
     )
 

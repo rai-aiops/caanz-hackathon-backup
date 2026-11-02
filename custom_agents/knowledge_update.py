@@ -5,10 +5,8 @@ from typing import Annotated, Literal
 from agents import Agent, ModelSettings
 from pydantic import BaseModel, Field
 
-# TODO: Import specialist guardrails
-# from guardrails import ()
+from guardrails import (analysis_confidence_guardrail)
 
-# TODO: Import specialist tools
 from tools import (
     FreshserviceTicketId,
     lookup_dependency_map_tool, 
@@ -190,8 +188,8 @@ def make_knowledge_update_agent() -> Agent:
             lookup_freshservice_tags_tool,
             update_freshservice_ticket_tags_tool
         ],
-        input_guardrails=[], # TODO: Add specialist input guardrails
-        output_guardrails=[], # TODO: Add specialist output guardrails
+        input_guardrails=[],
+        output_guardrails=[analysis_confidence_guardrail],
         output_type=KnowledgeUpdateOutput,
     )
 

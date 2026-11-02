@@ -68,16 +68,14 @@ def _record_agent_guardrail(
     )
 
 
-# TODO: Implement the relevant guardrail decorator
+@output_guardrail
 async def analysis_confidence_guardrail(
     ctx: RunContextWrapper[Any],
     agent: Agent,
     output: ConfidenceOutput,
 ) -> GuardrailFunctionOutput:
     """Reject an agent output whose declared confidence is below the threshold."""
-    #TODO: Implement our trip condition below. Our output should contain our pydantic fields, including output.confidence.
-    # We want tripped to be True if output.confidence is less than CONFIDENCE_THRESHOLD, and False otherwise.
-    tripped = False
+    tripped = output.confidence < CONFIDENCE_THRESHOLD
     status = "failed" if tripped else "passed"
     info = {
         "allowed": not tripped,
@@ -157,7 +155,7 @@ attack evidence from a live instruction addressed to the AI.
 """.strip()
 
 
-# TODO: Implement the relevant guardrail decorator
+@input_guardrail
 async def prompt_injection_and_malware_guardrail(
     ctx: RunContextWrapper[Any],
     agent: Agent,
@@ -194,7 +192,7 @@ async def prompt_injection_and_malware_guardrail(
     verdict = response.output_parsed
     #TODO: Implement our trip condition below. Our model response should return a verdict, including the field verdict.is_promptinjection.
         # We want tripped to be True if verdict.is_promptinjection is True, and False otherwise.
-    tripped = False
+    tripped = verdict.is_promptinjection
     info = verdict.model_dump()
     _record_agent_guardrail(
         stage="input",

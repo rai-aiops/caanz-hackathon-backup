@@ -5,8 +5,7 @@ from typing import Annotated, Literal
 from agents import Agent, ModelSettings
 from pydantic import BaseModel, Field
 
-# TODO: Import specialist guardrails
-# from guardrails import ()
+from guardrails import (analysis_confidence_guardrail)
 
 from tools import (
     FreshserviceTicketId, lookup_dependency_map_tool, 
@@ -108,8 +107,8 @@ def make_applications_assignment_agent() -> Agent:
         tools=[
         lookup_dependency_map_tool, lookup_applications_support_keywords_tool, lookup_freshservice_knowledge_base_tool, update_ticket_classification_tool, update_ticket_platform_tool, get_acknowledgement_template_tool, lookup_freshservice_categories_tool, lookup_freshservice_historical_tickets_tool
         ],
-        input_guardrails=[], # TODO: Add specialist input guardrails
-        output_guardrails=[], # TODO: Add specialist output guardrails
+        input_guardrails=[],
+        output_guardrails=[analysis_confidence_guardrail],
         output_type=ApplicationsAssignmentOutput,
     )
 
