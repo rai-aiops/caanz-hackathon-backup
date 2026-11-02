@@ -76,7 +76,7 @@ def _normalize(value: str) -> str:
     return " ".join(value.split()).casefold()
 
 
-@function_tool
+@function_tool(tool_output_guardrails=[tool_prompt_injection_and_malware_guardrail])
 def inspect_boomi_log_tool(
     process_id: str,
     incident_timestamp: AwareDatetime,

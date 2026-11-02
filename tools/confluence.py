@@ -63,7 +63,7 @@ def lookup_access_layer_tool() -> ConfluencePage:
     return ConfluencePage.model_validate(read_store("confluence_access_layer.json"))
 
 
-@function_tool
+@function_tool(tool_output_guardrails=[tool_prompt_injection_and_malware_guardrail])
 def lookup_confluence_knowledge_base_tool(
     query: str, limit: int = 10
 ) -> ConfluenceSearchResult:

@@ -122,7 +122,7 @@ class FreshserviceTagsResult(BaseModel):
     tagging_guidelines: str
 
 
-@function_tool
+@function_tool(tool_output_guardrails=[tool_prompt_injection_and_malware_guardrail])
 def lookup_ticket_data_tool(
     ticket_id: FreshserviceTicketId,
 ) -> FreshserviceTicket:
@@ -181,7 +181,7 @@ def lookup_applications_support_keywords_tool(
     )
 
 
-@function_tool
+@function_tool(tool_output_guardrails=[tool_prompt_injection_and_malware_guardrail])
 def lookup_freshservice_historical_tickets_tool(
     query: Annotated[str, Field(min_length=1)],
     current_ticket_id: FreshserviceTicketId,
@@ -232,7 +232,7 @@ def lookup_freshservice_historical_tickets_tool(
     )
 
 
-@function_tool
+@function_tool(tool_output_guardrails=[tool_prompt_injection_and_malware_guardrail])
 def lookup_freshservice_knowledge_base_tool(
     query: str, limit: int = 10
 ) -> FreshserviceSearchResult:
@@ -288,7 +288,7 @@ def lookup_freshservice_tags_tool() -> FreshserviceTagsResult:
     )
 
 
-@function_tool
+@function_tool(tool_input_guardrails=[tool_confidence_guardrail])
 def update_ticket_classification_tool(
     ticket_id: FreshserviceTicketId,
     classification: str,
@@ -324,7 +324,7 @@ def update_ticket_classification_tool(
         return result
 
 
-@function_tool
+@function_tool(tool_input_guardrails=[tool_confidence_guardrail])
 def update_ticket_platform_tool(
     ticket_id: FreshserviceTicketId,
     platform: str,
@@ -369,10 +369,11 @@ def update_ticket_platform_tool(
         return result
 
 
-@function_tool
+@function_tool(tool_input_guardrails=[tool_confidence_guardrail])
 def add_private_note_tool(
     ticket_id: FreshserviceTicketId,
     body: Annotated[str, Field(min_length=1)],
+    agent_confidence: Annotated[float, Field(ge=0, le=1)]
 ) -> FreshserviceNote:
     """Append a private finding or Freshservice KB recommendation.
 
@@ -401,11 +402,12 @@ def add_private_note_tool(
     return note
 
 
-@function_tool
+@function_tool(tool_input_guardrails=[tool_confidence_guardrail])
 def send_reply_tool(
     ticket_id: FreshserviceTicketId,
     subject: Annotated[str, Field(min_length=1)],
     body: Annotated[str, Field(min_length=1)],
+    agent_confidence: Annotated[float, Field(ge=0, le=1)]
 ) -> FreshserviceMessage:
     """Simulate a successful requester reply inside the Freshservice conversation.
 
