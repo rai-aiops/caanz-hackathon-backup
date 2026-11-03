@@ -36,6 +36,7 @@ Required Data:
 • Timestamp of incident
 
 Rules: 
+• Include a source in sources_used only when evidence actually retrieved or explicitly supplied from that source meaningfully contributed to this decision. The current ticket, its conversation and investigation notes are not ticket_history; use ticket_history only for retrieved historical-ticket evidence. Use freshservice_knowledge_base only for actual Freshservice support-article evidence, not Confluence pages. Do not infer source usage from available output labels or from sources another specialist may have consulted. Boomi logs have no corresponding source literal; cite them in evidence_references rather than assigning an unrelated source label.
 
 Instructions:
 
